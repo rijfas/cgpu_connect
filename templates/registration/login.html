@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>CGPU Connect: Please login to continue!</title>
+{% endblock head %}
+
+{% block content %}
+<h1>Please login to continue!</h1>
+<form method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="submit" value="Login">
+</form>
+
+{% endblock content %}
