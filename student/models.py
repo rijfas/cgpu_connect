@@ -84,7 +84,7 @@ class Department(models.Model):
 
 
 
-class StudentProfile(models.Model):
+class Student(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=150)
     middle_name = models.CharField(max_length=150, null=True, blank=True)
@@ -111,13 +111,13 @@ class StudentProfile(models.Model):
     cleared_arrears = models.IntegerField(default=0)
 
 class Result(models.Model):
-    profile = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
     gpa = models.DecimalField(max_digits=5, decimal_places=3)
     is_failed = models.BooleanField(default=False)
 
 class AcademicQualification(models.Model):
-    profile = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     type_of_education = models.CharField(max_length=50, choices=TYPE_OF_EDUCATION_CHOICES)
     board = models.CharField(max_length=150)
     year_of_pass = models.IntegerField()
