@@ -71,6 +71,17 @@ SEMESTER_CHOICES = (
     ('12', 'Twelfth',),
 )
 
+STREAM_CHOICE = (
+    ('BTECH', 'B.Tech'),
+    ('MTECH', 'M.Tech'),
+    ('MBA', 'MBA'),
+    ('MCA', 'MCA'),
+)
+class Department(models.Model):
+    name = models.CharField(max_length=150)
+    stream = models.CharField(max_length=10, choices=STREAM_CHOICE)
+    course = models.CharField(max_length=150)
+
 
 
 class StudentProfile(models.Model):
@@ -90,6 +101,7 @@ class StudentProfile(models.Model):
     communication_address = models.TextField()
     mobile_no = models.CharField(max_length=12)
     email_id = models.CharField(max_length=150)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     entrance_type = models.CharField(max_length=50, null=True, blank=True, choices=ENTRANCE_TYPE_CHOICES)
     entrance_rank = models.IntegerField(null=True,blank=True)
     year_of_pass = models.IntegerField()
