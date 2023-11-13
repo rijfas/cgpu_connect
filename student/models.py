@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from core.models import Account
+
 
 SEX_CHOICES = (
     ('Male', 'Male'),
@@ -85,7 +86,7 @@ class Department(models.Model):
 
 
 class Student(models.Model):
-    account = models.OneToOneField(User, on_delete=models.CASCADE)
+    account = models.OneToOneField(Account, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=150)
     middle_name = models.CharField(max_length=150, null=True, blank=True)
     last_name = models.CharField(max_length=150, null=True, blank=True)

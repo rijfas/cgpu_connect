@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from core.models import Account
 
 from student.models import Student, Department
 
@@ -29,7 +29,7 @@ SLAB_CHOICES = (
 )
 
 class Recruiter(models.Model):
-    account = models.OneToOneField(User, on_delete=models.CASCADE)
+    account = models.OneToOneField(Account, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     mobile_no = models.CharField(max_length=15, blank=True, null=True)
     email_id = models.CharField(max_length=30, blank=False, null=False)
