@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('student/', include('student.urls', namespace='student')),
     path('cgpu_admin/', include('cgpu_admin.urls', namespace='cgpu_admin')),
+    path('', include('core.urls', namespace='core'),),
     path('', include(urls)),
 ]
