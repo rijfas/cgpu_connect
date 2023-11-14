@@ -1,16 +1,17 @@
 from django.shortcuts import render
 from student.models import Department, Student
-from core.decorators import admin_login_required
+from core.decorators import login_required_with_type
 
-@admin_login_required
+
+@login_required_with_type('admin')
 def home(request):
     return render(request, 'cgpu_admin/home.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def students(request):
     return render(request, 'cgpu_admin/students.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def departments(request):
     departments = Department.objects.all()
     context = {
@@ -18,27 +19,27 @@ def departments(request):
     }
     return render(request, 'cgpu_admin/departments.html', context)
 
-@admin_login_required
+@login_required_with_type('admin')
 def recruiters(request):
     return render(request, 'cgpu_admin/recruiters.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def jobs(request):
     return render(request, 'cgpu_admin/jobs.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def shortlists(request):
     return render(request, 'cgpu_admin/shortlists.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def learning(request):
     return render(request, 'cgpu_admin/learning.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def announcements(request):
     return render(request, 'cgpu_admin/announcements.html')
 
-@admin_login_required
+@login_required_with_type('admin')
 def accounts(request):
     return render(request, 'cgpu_admin/accounts.html')
 
