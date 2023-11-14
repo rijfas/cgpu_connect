@@ -1,31 +1,25 @@
 <div class="relative flex justify-end bg-slate-100 w-full p-2">
-    <button id="profile" class=" inline-flex items-center justify-center w-10 h-10 m-1 bg-white overflow-hidden rounded-full">
-        <span class="font-medium text-gray-600 ">{{ request.user.username.0|upper }}</span>
-    </button>
-    <div id="nav-popup" class="z-10 hidden absolute top-12 right-2 flex-col bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-        <div class="px-4 py-3 text-sm text-gray-900">
-          <div>{{ request.user }}</div>
-          <div class="font-medium truncate">{{ request.user.email }}</div>
+    <div id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="relative cursor-pointer inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-white rounded-full ">
+        <span class="font-medium text-gray-600 ">{{ request.user.username.0|upper }}{{ request.user.username.1|upper }}</span>
+    </div>
+    
+    <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44  ">
+        <div class="px-4 py-3 text-sm text-gray-900 ">
+        <div>{{ request.user|title }}</div>
+        <div class="font-medium truncate">{{ request.user.email }}</div>
         </div>
+        <ul class="py-2 text-sm text-gray-700 " aria-labelledby="avatarButton">
+        <li>
+            <a href="{% url "cgpu_admin:home" %}" class="block px-4 py-2 hover:bg-gray-100  ">Home</a>
+        </li>
+        <li>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100  ">Settings</a>
+        </li>
+        </ul>
         <div class="py-1">
-          <a href="/logout/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Sign out</a>
+        <a href="/logout/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   ">Sign out</a>
         </div>
     </div>
-</div>
 
-<script>
-    const navPopup = document.querySelector('#nav-popup');
-    const profile = document.querySelector('#profile');
-    profile.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navPopup.classList.remove('hidden');
-        navPopup.classList.add('flex');
-    })
-    document.body.addEventListener('click', (e) => {
-        if(e.target !== profile && e.target !== navPopup) {
-            navPopup.classList.remove('flex');
-            navPopup.classList.add('hidden');
-        }
-    })
-</script>
+</div>
 
