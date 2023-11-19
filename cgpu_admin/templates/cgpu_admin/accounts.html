@@ -139,24 +139,7 @@
                     </div>
                     
                 </div>
-                
-                <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-                    <span class="text-sm font-normal text-gray-500  mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 ">{{start_index}}-{{end_index}}</span> of <span class="font-semibold text-gray-900 ">{{total_count}}</span></span>
-                    <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-                        <li>
-                            <a href="{% if prev %}?page={{prev}}{% else %}#{% endif %}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight {% if has_prev %}text-gray-500{% else %}pointer-events-none text-gray-300{% endif %} bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700     ">Previous</a>
-                        </li>
-                        {% for page_no in page_range %}
-                            <li>
-                                <a href="{% if  page_no == current_page_number %}#{% else %}?page={{page_no}}{% endif %}" class="flex items-center justify-center px-3 h-8 {% if page_no == current_page_number %} text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700{% else %}leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700{% endif %}">{{ page_no }}</a>
-                            </li>
-                        {% endfor %}
-                        <li>
-                    <a href="{% if next %}?page={{next}}{% else %}#{% endif %}" class="flex items-center justify-center px-3 h-8 leading-tight bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 {% if has_next %}text-gray-500{% else %}pointer-events-none text-gray-300{% endif %}">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-
+                {% include "cgpu_admin/pagination.html" %}
             </div>
        </div>
 </div>
