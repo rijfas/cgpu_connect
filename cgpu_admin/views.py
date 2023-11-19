@@ -15,11 +15,31 @@ def students(request):
 
 @login_required_with_type('admin')
 def departments(request):
-    departments = Department.objects.all()
+    search = request.GET.get('q')
+    departments = Department.objects.filter(name__icontains=search) if search else Department.objects.all() 
+    paginator = Paginator(departments, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'departments': departments
+        'search': search,
+        'departments': current_page.object_list,
+        'total_count': departments.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'cgpu_admin/departments.html', context)
+
+@login_required_with_type('admin')
+def create_department(request):
+    department = Department.objects.create(name=request.POST['name'])
+    department.save()
+    return redirect('cgpu_admin:departments')
 
 @login_required_with_type('admin')
 def recruiters(request):

@@ -12,18 +12,12 @@
             <div class="flex flex-col w-full h-full p-5 bg-white rounded-l-xl">
                 <div class="flex items-center justify-between">
                     <h1 class="text-lg font-semibold underline">Departments</h1>
-                    <div class=" bg-white items-center">
-                        <label for="table-search" class="sr-only">Search</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                </svg>
-                            </div>
-                            <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search departments">
-                        </div>
+                    <div class="flex gap-2 justify-end items-center">
+                        {% if search %}
+                        <span class="text-sm text-gray-400">showing results for "{{search}}" (<a href="{% url "cgpu_admin:departments" %}" class="underline">clear</a>)</span>
+                        {% endif %}
+                        {% include "cgpu_admin/search_bar.html" %}
                     </div>
-
                 </div>
                 <div class="relative h-full overflow-x-hidden overflow-y-auto mt-5 shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -39,10 +33,7 @@
                                     Name
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Stream
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Course
+                                    Courses
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Students
@@ -53,6 +44,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for department in departments %}
                             <tr class="bg-white border-b  hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
@@ -61,24 +53,23 @@
                                     </div>
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    MCA
+                                    {{ department.name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    MCA
+                                    {{ department.courses }}
+
                                 </td>
                                 <td class="px-6 py-4">
-                                    MCA
-                                </td>
-                                <td class="px-6 py-4">
-                                    118
+                                    {{ department.students }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                         <div class="absolute end-6 bottom-6 group">
-                            <button type="button" class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800   focus:ring-4 focus:ring-blue-300 focus:outline-none ">
+                            <button data-modal-target="create-department-modal" data-modal-toggle="create-department-modal" type="button" class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800   focus:ring-4 focus:ring-blue-300 focus:outline-none ">
                                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                                 </svg>
@@ -87,35 +78,37 @@
                         </div>
                     </table>
                 </div>
-                
-                <nav class="pb-2 flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-                    <span class="text-sm font-normal text-gray-500  mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 ">1-10</span> of <span class="font-semibold text-gray-900 ">1000</span></span>
-                    <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700     ">Previous</a>
-                        </li>
-                        <li>
-                            <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700   ">1</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">2</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">3</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">4</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">5</a>
-                        </li>
-                        <li>
-                    <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700     ">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                {% include "cgpu_admin/pagination.html" %}
+
 
             </div>
        </div>
 </div>
+<div id="create-department-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Create Department
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  " data-modal-hide="create-department-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <form method="post" class="space-y-4" action="{% url "cgpu_admin:create_department" %}">
+                    {% csrf_token %}
+                    <div>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Name</label>
+                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Eg.Computer Science" required>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   ">Create departmentment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
 {% endblock content %}
