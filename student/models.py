@@ -80,10 +80,11 @@ STREAM_CHOICE = (
 )
 class Department(models.Model):
     name = models.CharField(max_length=150)
+
+class Course(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     stream = models.CharField(max_length=10, choices=STREAM_CHOICE)
     course = models.CharField(max_length=150)
-
-
 
 class Student(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
@@ -102,7 +103,7 @@ class Student(models.Model):
     communication_address = models.TextField()
     mobile_no = models.CharField(max_length=12)
     email_id = models.CharField(max_length=150)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     entrance_type = models.CharField(max_length=50, null=True, blank=True, choices=ENTRANCE_TYPE_CHOICES)
     entrance_rank = models.IntegerField(null=True,blank=True)
     year_of_pass = models.IntegerField()
