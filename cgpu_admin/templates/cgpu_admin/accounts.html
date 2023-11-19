@@ -12,15 +12,21 @@
             <div class="flex flex-col w-full h-full p-5 bg-white rounded-l-xl">
                 <div class="flex items-center justify-between">
                     <h1 class="text-lg font-semibold underline">Accounts</h1>
-                    <div class=" bg-white items-center">
-                        <label for="table-search" class="sr-only">Search</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                </svg>
-                            </div>
-                            <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search accounts">
+                    <div class="flex gap-2 justify-end items-center">
+                        {% if search %}
+                        <span class="text-sm text-gray-400">showing results for "{{search}}" (<a href="{% url "cgpu_admin:accounts" %}" class="underline">clear</a>)</span>
+                        {% endif %}
+                        <div class=" bg-white items-center">
+                            <label for="table-search" class="sr-only">Search</label>
+                            <form method="get" class="relative">
+                                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input name="q" type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search accounts">
+                                <input type="submit" hidden>
+                            </form>
                         </div>
                     </div>
 
@@ -50,6 +56,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for account in accounts %}
                             <tr class="bg-white border-b  hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
@@ -58,25 +65,26 @@
                                     </div>
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    Rijfas
+                                    {{ account.username }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    Admin
+                                    {{ account.type }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    Active
+                                    {% if account.is_active %}Active{% else %}Disabled{% endif %}
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="#" class="font-medium text-blue-600  hover:underline">Edit</a>
                                 </td>
                             </tr>
+                            {% endfor %}
 
                             
                         </tbody>
                     </table>
                     <div data-dial-init class="absolute end-6 bottom-6 group">
                         <div id="speed-dial-menu-default" class="flex flex-col items-center hidden mb-4 space-y-2">
-                            <button type="button" data-tooltip-target="tooltip-admin" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200  shadow-sm   hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
+                            <button data-modal-target="create-admin-account-modal" data-modal-toggle="create-admin-account-modal" type="button" data-tooltip-target="tooltip-admin" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200  shadow-sm   hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                     <path d="M11.584 2.376a.75.75 0 01.832 0l9 6a.75.75 0 11-.832 1.248L12 3.901 3.416 9.624a.75.75 0 01-.832-1.248l9-6z" />
                                     <path fill-rule="evenodd" d="M20.25 10.332v9.918H21a.75.75 0 010 1.5H3a.75.75 0 010-1.5h.75v-9.918a.75.75 0 01.634-.74A49.109 49.109 0 0112 9c2.59 0 5.134.202 7.616.592a.75.75 0 01.634.74zm-7.5 2.418a.75.75 0 00-1.5 0v6.75a.75.75 0 001.5 0v-6.75zm3-.75a.75.75 0 01.75.75v6.75a.75.75 0 01-1.5 0v-6.75a.75.75 0 01.75-.75zM9 12.75a.75.75 0 00-1.5 0v6.75a.75.75 0 001.5 0v-6.75z" clip-rule="evenodd" />
@@ -89,7 +97,7 @@
                                 Admin
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <button type="button" data-tooltip-target="tooltip-recruiter" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200  shadow-sm   hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
+                            <button data-modal-target="create-recruiter-account-modal" data-modal-toggle="create-recruiter-account-modal" type="button" data-tooltip-target="tooltip-recruiter" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200  shadow-sm   hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                     <path fill-rule="evenodd" d="M7.5 5.25a3 3 0 013-3h3a3 3 0 013 3v.205c.933.085 1.857.197 2.774.334 1.454.218 2.476 1.483 2.476 2.917v3.033c0 1.211-.734 2.352-1.936 2.752A24.726 24.726 0 0112 15.75c-2.73 0-5.357-.442-7.814-1.259-1.202-.4-1.936-1.541-1.936-2.752V8.706c0-1.434 1.022-2.7 2.476-2.917A48.814 48.814 0 017.5 5.455V5.25zm7.5 0v.09a49.488 49.488 0 00-6 0v-.09a1.5 1.5 0 011.5-1.5h3a1.5 1.5 0 011.5 1.5zm-3 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
                                     <path d="M3 18.4v-2.796a4.3 4.3 0 00.713.31A26.226 26.226 0 0012 17.25c2.892 0 5.68-.468 8.287-1.335.252-.084.49-.189.713-.311V18.4c0 1.452-1.047 2.728-2.523 2.923-2.12.282-4.282.427-6.477.427a49.19 49.19 0 01-6.477-.427C4.047 21.128 3 19.852 3 18.4z" />
@@ -100,7 +108,7 @@
                                 Recruiter
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <button type="button" data-tooltip-target="tooltip-student" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200  shadow-sm   hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
+                            <button data-modal-target="create-student-account-modal" data-modal-toggle="create-student-account-modal" type="button" data-tooltip-target="tooltip-student" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200  shadow-sm   hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                     <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
                                   </svg>                                  
@@ -110,7 +118,7 @@
                                 Student
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <button type="button" data-tooltip-target="tooltip-student-bulk" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200   shadow-sm  hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
+                            <button data-modal-target="create-students-account-modal" data-modal-toggle="create-students-account-modal" type="button" data-tooltip-target="tooltip-student-bulk" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200   shadow-sm  hover:bg-gray-50   focus:ring-4 focus:ring-gray-300 focus:outline-none ">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                     <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM15.75 9.75a3 3 0 116 0 3 3 0 01-6 0zM2.25 9.75a3 3 0 116 0 3 3 0 01-6 0zM6.31 15.117A6.745 6.745 0 0112 12a6.745 6.745 0 016.709 7.498.75.75 0 01-.372.568A12.696 12.696 0 0112 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 01-.372-.568 6.787 6.787 0 011.019-4.38z" clip-rule="evenodd" />
                                     <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
@@ -132,29 +140,19 @@
                     
                 </div>
                 
-                <nav class="pb-2 flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-                    <span class="text-sm font-normal text-gray-500  mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 ">1-10</span> of <span class="font-semibold text-gray-900 ">1000</span></span>
+                <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+                    <span class="text-sm font-normal text-gray-500  mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 ">{{start_index}}-{{end_index}}</span> of <span class="font-semibold text-gray-900 ">{{total_count}}</span></span>
                     <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                         <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700     ">Previous</a>
+                            <a href="{% if prev %}?page={{prev}}{% else %}#{% endif %}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight {% if has_prev %}text-gray-500{% else %}pointer-events-none text-gray-300{% endif %} bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700     ">Previous</a>
                         </li>
+                        {% for page_no in page_range %}
+                            <li>
+                                <a href="{% if  page_no == current_page_number %}#{% else %}?page={{page_no}}{% endif %}" class="flex items-center justify-center px-3 h-8 {% if page_no == current_page_number %} text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700{% else %}leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700{% endif %}">{{ page_no }}</a>
+                            </li>
+                        {% endfor %}
                         <li>
-                            <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700   ">1</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">2</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">3</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">4</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">5</a>
-                        </li>
-                        <li>
-                    <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700     ">Next</a>
+                    <a href="{% if next %}?page={{next}}{% else %}#{% endif %}" class="flex items-center justify-center px-3 h-8 leading-tight bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 {% if has_next %}text-gray-500{% else %}pointer-events-none text-gray-300{% endif %}">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -162,4 +160,136 @@
             </div>
        </div>
 </div>
+<div id="create-admin-account-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Create admin account
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  " data-modal-hide="create-admin-account-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <form method="post" class="space-y-4" action="{% url "cgpu_admin:create_account" %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="type" value="admin">
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Admin username</label>
+                        <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Username" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Admin password</label>
+                        <input type="text" name="password" id="password" placeholder="Enter password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " required>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   ">Create admin account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
+<div id="create-recruiter-account-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Create recruiter account
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  " data-modal-hide="create-recruiter-account-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <form method="post" class="space-y-4" action="{% url "cgpu_admin:create_account" %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="type" value="recruiter">
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Recruiter username</label>
+                        <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Username" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Recruiter password</label>
+                        <input type="text" name="password" id="password" placeholder="Enter password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " required>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   ">Create recruiter account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="create-student-account-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Create student account
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  " data-modal-hide="create-student-account-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <form method="post" class="space-y-4" action="{% url "cgpu_admin:create_account" %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="type" value="student">
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Student username</label>
+                        <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Username" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Student password</label>
+                        <input type="text" name="password" id="password" placeholder="Enter password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " required>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   ">Create student account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="create-students-account-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Bulk create students account
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  " data-modal-hide="create-students-account-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <form method="post" class="space-y-4" action="{% url "cgpu_admin:bulk_create_student_account" %}">
+                    {% csrf_token %}
+                    <div>
+                        <label for="username-prefix" class="block mb-2 text-sm font-medium text-gray-900 ">Student Username Prefix</label>
+                        <input type="text" name="username-prefix" id="username-prefix" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Eg: TVE22MCA" required>
+                    </div>
+                    <div>
+                        <label for="count" class="block mb-2 text-sm font-medium text-gray-900 ">Number of accounts</label>
+                        <input type="number" name="count" id="count" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " required>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Default password</label>
+                        <input type="text" name="password" id="password" placeholder="Enter password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " required>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   ">Create student account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
