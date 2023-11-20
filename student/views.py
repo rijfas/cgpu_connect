@@ -1,5 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from core.decorators import login_required_with_type
+from .forms import RegisterStudentForm
+
+
+login_required_with_type('student')
+def register_basic_info(request):
+    if request.method == 'POST':
+        form = RegisterStudentForm(request.POST)
+        student = form.save(commit=False)
+        student.account = request.user 
+        if form.is_valid():
+            form.save()
+            return redirect('student:home')
+    form = RegisterStudentForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'student/register.html', context)
+
+login_required_with_type('student')
+def add_academic_info(request):
+    if request.method == 'POST':
+        form = RegisterStudentForm(request.POST)
+        student = form.save(commit=False)
+        student.account = request.user 
+        if form.is_valid():
+            form.save()
+            return redirect('student:home')
+    form = RegisterStudentForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'student/register.html', context)
 
 login_required_with_type('student')
 def home(request):
