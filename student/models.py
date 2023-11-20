@@ -85,6 +85,9 @@ class Course(models.Model):
     stream = models.CharField(max_length=10, choices=STREAM_CHOICE)
     course = models.CharField(max_length=150)
 
+    def __str__(self):
+        return self.stream + ' ' + self.course
+
 class Student(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=150)
@@ -95,9 +98,9 @@ class Student(models.Model):
     sex = models.CharField(max_length=20, choices=SEX_CHOICES)
     weight = models.IntegerField(null=True, blank=True)
     category = models.CharField(max_length=25, choices=CATEGORY_CHOICES)
-    religion = models.CharField(max_length=20, choices=LANGUAGE_CHOICES)
-    guardian_name = models.CharField(max_length=150)
-    guardian_occupation = models.CharField(max_length=150)
+    religion = models.CharField(max_length=20, choices=RELEGION_CHOICES)
+    guardian_name = models.CharField(max_length=150, null=True, blank=True)
+    guardian_occupation = models.CharField(max_length=150, null=True, blank=True)
     permenant_address = models.TextField()
     communication_address = models.TextField()
     mobile_no = models.CharField(max_length=12)
@@ -135,4 +138,7 @@ class Department(models.Model):
     
     def students(self):
         return Student.objects.filter(department=self).count()
+    
+    def __str__(self):
+        return self.name
     
