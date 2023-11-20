@@ -10,6 +10,8 @@ def login(request):
             login_user(request, user)
             if user.type == 'admin':
                 return redirect('cgpu_admin:home')
+            elif user.type == 'student':
+                return redirect('student:home')
         else:
             form = AuthenticationForm(request, request.POST)
             return render(request, 'registration/login.html', {"form": form})
