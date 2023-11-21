@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'core',
     'student',
     'cgpu_admin',
-    'recruiter'
+    'recruiter',
+    'coordinator'
 ]
 
 MIDDLEWARE = [

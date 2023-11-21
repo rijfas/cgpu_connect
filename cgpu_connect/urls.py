@@ -23,6 +23,7 @@ urlpatterns = [
     path('student/', include('student.urls', namespace='student')),
     path('cgpu_admin/', include('cgpu_admin.urls', namespace='cgpu_admin')),
     path('recruiter/', include('recruiter.urls', namespace='recruiter')),
+    path('coordinator/', include('coordinator.urls', namespace='coordinator')),
     path('', include('core.urls', namespace='core'),),
     path('', include(urls)),
 ]
