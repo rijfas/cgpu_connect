@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl py-10 mx-auto flex flex-col">
+    <form method="post">
+        {% csrf_token %}
+        <h1 class="text-2xl font-semibold">Student Profile</h1>
+        <ol class="flex my-10 items-center w-full font-medium text-center text-gray-500  text-base">
+            
+            <li class="flex justify-center w-full items-center">
+                <span class="flex items-center">
+                    <span class="me-2">1</span>
+                    Basic Info
+                </span>
+            </li>
+            <div class="w-full border-b">
+
+            </div>
+            <li class="flex justify-center w-full items-center text-blue-600 ">
+                <span class="flex items-center ">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                    </svg>
+                    Academic Info
+                </span>
+            </li>
+        </ol>
+
+        <fieldset class="mb-6">
+            <div class="flex items-center">
+                <div class="w-1/3 border-b border-dashed"></div>
+                <h2 class="w-1/3 font-semibold mb-5 text-center text-base">High School</h2>
+                <div class="w-1/3 border-b border-dashed"></div>
+            </div>
+            <div class="flex gap-2">
+                <div class="mb-6 w-1/2">
+                    <label for="hsc_board" class="block mb-2 text-sm font-medium text-gray-900 ">Board <span class="text-red-500">*</span></label>
+                    <input type="text" name="hsc_board" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter board" required>
+                </div>
+                <div class="mb-6 w-1/2">
+                    <label for="hsc_year_of_pass" class="block mb-2 text-sm font-medium text-gray-900 ">Year of pass <span class="text-red-500">*</span></label>
+                    <input type="number" name="hsc_year_of_pass" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter year of pass" required>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="mb-6 w-1/2">
+                    <label for="hsc_grade" class="block mb-2 text-sm font-medium text-gray-900 ">Grade/Percentage <span class="text-red-500">*</span></label>
+                    <input type="number" step="any" name="hsc_grade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter grade/percentage" required>
+                </div>
+                <div class="mb-6 w-1/2">
+                    <label for="hsc_institution" class="block mb-2 text-sm font-medium text-gray-900 ">Institution <span class="text-red-500">*</span></label>
+                    <input type="text" name="hsc_institution" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter name of institution" required>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="mb-6">
+            <div class="flex items-center">
+                <div class="w-1/3 border-b border-dashed"></div>
+                <h2 class="w-1/3 font-semibold mb-5 text-center text-base">Secondary School</h2>
+                <div class="w-1/3 border-b border-dashed"></div>
+            </div>
+            <div class="flex gap-2">
+                <div class="mb-6 w-1/2">
+                    <label for="ssc_board" class="block mb-2 text-sm font-medium text-gray-900 ">Board <span class="text-red-500">*</span></label>
+                    <input type="text" name="ssc_board" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter board" required>
+                </div>
+                <div class="mb-6 w-1/2">
+                    <label for="ssc_year_of_pass" class="block mb-2 text-sm font-medium text-gray-900 ">Year of pass <span class="text-red-500">*</span></label>
+                    <input type="number" name="ssc_year_of_pass" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter year of pass" required>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="mb-6 w-1/2">
+                    <label for="ssc_grade" class="block mb-2 text-sm font-medium text-gray-900 ">Grade/Percentage <span class="text-red-500">*</span></label>
+                    <input type="number" step="any"  name="ssc_grade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter grade/percentage" required>
+                </div>
+                <div class="mb-6 w-1/2">
+                    <label for="ssc_institution" class="block mb-2 text-sm font-medium text-gray-900 ">Institution <span class="text-red-500">*</span></label>
+                    <input type="text" name="ssc_institution" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter name of institution" required>
+                </div>
+            </div>
+        </fieldset>
+        <div class="flex items-center mb-4">
+            <input id="pg-toggle" name="pg" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 " >
+            <label for="checkbox-1" class="ms-2 text-sm font-medium text-gray-900 ">Postgraduate Student.</label>
+        </div>
+        <fieldset id="pg" class="mb-6 opacity-25 cursor-not-allowed">
+            <div class="flex items-center">
+                <div class="w-1/3 border-b border-dashed"></div>
+                <h2 class="w-1/3 font-semibold mb-5 text-center text-base">Undergraduate</h2>
+                <div class="w-1/3 border-b border-dashed"></div>
+            </div>
+            <div class="flex gap-2">
+                <div class="mb-6 w-1/2">
+                    <label for="ug_board" class="block mb-2 text-sm font-medium text-gray-900 ">Board <span class="text-red-500">*</span></label>
+                    <input disabled type="text" name="ug_board" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter board" required>
+                </div>
+                <div class="mb-6 w-1/2">
+                    <label for="ug_year_of_pass" class="block mb-2 text-sm font-medium text-gray-900 ">Year of pass <span class="text-red-500">*</span></label>
+                    <input disabled type="number" name="ug_year_of_pass" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter year of pass" required>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="mb-6 w-1/2">
+                    <label for="ug_grade" class="block mb-2 text-sm font-medium text-gray-900 ">Grade/Percentage <span class="text-red-500">*</span></label>
+                    <input disabled type="number" step="any"  name="ug_grade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter grade/percentage" required>
+                </div>
+                <div class="mb-6 w-1/2">
+                    <label for="ug_institution" class="block mb-2 text-sm font-medium text-gray-900 ">Institution <span class="text-red-500">*</span></label>
+                    <input disabled type="text" name="ug_institution" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Enter name of institution" required>
+                </div>
+            </div>
+        </fieldset>
+        <script>
+            document.querySelector('#pg-toggle').addEventListener('change', (e) => {
+                const pg = document.querySelector('#pg');
+                const inputs = document.querySelectorAll('#pg input');
+                if(e.target.checked) {
+                    pg.classList.remove('opacity-25');
+                    pg.classList.remove('cursor-not-allowed');
+                    inputs.forEach(input => {
+                        input.classList.remove('cursor-not-allowed');
+                        input.disabled = false;
+                    });
+                }
+                else {
+                    inputs.forEach(input => {
+                        input.classList.add('cursor-not-allowed');
+                        input.disabled = true;
+                        input.value = "";
+                    });
+                    pg.classList.add('opacity-25');
+                    pg.classList.add('cursor-not-allowed');
+                }
+            })
+        </script>
+
+        
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center   ">Complete profile</button>
+    </form>
+</div>
+  
+{% endblock content %}
