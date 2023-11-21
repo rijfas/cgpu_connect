@@ -16,7 +16,7 @@ def register_basic_info(request):
     context = {
         'form': form
     }
-    return render(request, 'student/register.html', context)
+    return render(request, 'student/register_basic_info.html', context)
 
 login_required_with_type('student')
 def add_academic_info(request):
