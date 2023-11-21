@@ -11,7 +11,215 @@
     <div class="flex flex-col w-full h-full">
        {% include "student/navbar.html" %}
         <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
-                <h1>Profile</h1>
+            <h1 class="font-semibold">My Profile</h1>
+            <div class="flex gap-4 items-center border-2 border-slate-100 p-6 rounded-lg">
+                <div class="relative inline-flex items-center justify-center w-14 h-14 overflow-hidden bg-gray-100 rounded-full">
+                    <span class="font-medium text-gray-600 ">{{ request.user.username.0|upper }}{{ request.user.username.1|upper }}</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-lg font-semibold">{{ profile.first_name|title }} {% if profile.middle_name %}{{ profile.middle_name|title }}{% endif %} {% if profile.last_name %}{{ profile.last_name|title }}{% endif %}</span>
+                    <span class="text-xs font-semibold text-gray-500">{{ profile.email_id }}</span>
+                    <span class="text-sm text-gray-400">{{ request.user.username }}</span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-8 border-2 border-slate-100 p-6 rounded-lg">
+                <span class="text-lg font-semibold">Personal Information</span>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">First Name</span>
+                        <span class="text-lg font-semibold">{{ profile.first_name }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Middle Name</span>
+                        <span class="text-lg font-semibold">{% if profile.middle_name %}{{ profile.middle_name }}{% else %}-{% endif %}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Last Name</span>
+                        <span class="text-lg font-semibold">{% if profile.last_name %}{{ profile.last_name }}{% else %}-{% endif %}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Date of Birth</span>
+                        <span class="text-lg font-semibold">{{ profile.dob }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Height</span>
+                        <span class="text-lg font-semibold">{% if profile.height %}{{ profile.height }}{% else %}-{% endif %}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Sex</span>
+                        <span class="text-lg font-semibold">{{ profile.sex }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Weight</span>
+                        <span class="text-lg font-semibold">{% if profile.weight %}{{ profile.weight }}{% else %}-{% endif %}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Category</span>
+                        <span class="text-lg font-semibold">{{ profile.category }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Religion</span>
+                        <span class="text-lg font-semibold">{{ profile.religion }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Guardian Name</span>
+                        <span class="text-lg font-semibold">{% if profile.guardian_name %}{{ profile.guardian_name }}{% else %}-{% endif %}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Guardian Occupation</span>
+                        <span class="text-lg font-semibold">{% if profile.guardian_occupation %}{{ profile.guardian_occupation }}{% else %}-{% endif %}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Permanent Address</span>
+                        <span class="text-lg font-semibold">{{ profile.permanent_address }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Communication Address</span>
+                        <span class="text-lg font-semibold">{{ profile.communication_address }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Mobile Number</span>
+                        <span class="text-lg font-semibold">{{ profile.mobile_no }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Email ID</span>
+                        <span class="text-lg font-semibold">{{ profile.email_id }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Department</span>
+                        <span class="text-lg font-semibold">{{ profile.department }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Course</span>
+                        <span class="text-lg font-semibold">{{ profile.course }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Entrance Type</span>
+                        <span class="text-lg font-semibold">{{ profile.entrance_type }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Entrance Rank</span>
+                        <span class="text-lg font-semibold">{{ profile.entrance_rank }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Year of Pass</span>
+                        <span class="text-lg font-semibold">{{ profile.year_of_pass }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Admission Number</span>
+                        <span class="text-lg font-semibold">{{ profile.admission_number }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">KTU ID</span>
+                        <span class="text-lg font-semibold">{{ profile.ktu_id }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Pending Arrears</span>
+                        <span class="text-lg font-semibold">{{ profile.pending_arrears }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Cleared Arrears</span>
+                        <span class="text-lg font-semibold">{{ profile.cleared_arrears }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-8 border-2 border-slate-100 p-6 rounded-lg">
+                <span class="text-lg font-semibold">Academic Information: High School</span>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">Board</span>
+                            <span class="text-lg font-semibold">{{ hsc.board }}</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">Year of Pass</span>
+                            <span class="text-lg font-semibold">{{ hsc.year_of_pass }}</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">{% if hsc.grade > 10 %}Percentage{% else %}CGPA{% endif %}</span>
+                            <span class="text-lg font-semibold">{{ hsc.grade }}</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">Institution</span>
+                            <span class="text-lg font-semibold">{{ hsc.institution }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-8 border-2 border-slate-100 p-6 rounded-lg">
+                <span class="text-lg font-semibold">Academic Information: Secondary School</span>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Board</span>
+                        <span class="text-lg font-semibold">{{ ssc.board }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Year of Pass</span>
+                        <span class="text-lg font-semibold">{{ ssc.year_of_pass }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">{% if ssc.grade > 10 %}Percentage{% else %}CGPA{% endif %}</span>
+                        <span class="text-lg font-semibold">{{ ssc.grade }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Institution</span>
+                        <span class="text-lg font-semibold">{{ ssc.institution }}</span>
+                    </div>
+                </div>
+            </div>
+            {% if ug %}
+            <div class="flex flex-col gap-8 border-2 border-slate-100 p-6 rounded-lg">
+                <span class="text-lg font-semibold">Academic Information: Undergraduate</span>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Board</span>
+                        <span class="text-lg font-semibold">{{ ug.board }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Year of Pass</span>
+                        <span class="text-lg font-semibold">{{ ug.year_of_pass }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">{% if ug.grade > 10 %}Percentage{% else %}CGPA{% endif %}</span>
+                        <span class="text-lg font-semibold">{{ ug.grade }}</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1">
+                        <span class="text-sm text-gray-300">Institution</span>
+                        <span class="text-lg font-semibold">{{ ug.institution }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
        </div>
 </div>
 {% endblock content %}

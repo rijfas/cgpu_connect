@@ -53,7 +53,18 @@ def home(request):
 
 login_required_with_type('student')
 def profile(request):
-    return render(request, 'student/profile.html')
+    profile = Student.objects.get(account=request.user)
+    try:
+        ug = AcademicQualification.objects.get(student=profile, type_of_education='UG')
+    except ObjectDoesNotExist:
+        ug = None
+    context = {
+        'profile': profile,
+        'hsc': AcademicQualification.objects.get(student=profile, type_of_education='HSC'),
+        'ssc': AcademicQualification.objects.get(student=profile, type_of_education='SSC'),
+        'ug': ug,
+    }
+    return render(request, 'student/profile.html', context)
 
 login_required_with_type('student')
 def jobs(request):
