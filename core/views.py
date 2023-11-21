@@ -23,6 +23,9 @@ def login(request):
                 except ObjectDoesNotExist:
                     return redirect('student:register-basic-info')
                 return redirect('student:home')
+            elif user.type == 'recruiter':
+                return redirect('recruiter:home')
+
         else:
             form = AuthenticationForm(request, request.POST)
             return render(request, 'registration/login.html', {"form": form})
