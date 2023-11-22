@@ -35,7 +35,14 @@ class Recruiter(models.Model):
     email_id = models.CharField(max_length=30, blank=False, null=False)
     website = models.CharField(max_length=50)
 
+class Application(models.Model):
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    applied_on = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=3, choices=APPLICATION_STATUS_CHOICES, default='APL')
+    remarks = models.CharField(max_length=150, null=True, blank=True)
 class Job(models.Model):
+    is_open = models.BooleanField(default=True)
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     role = models.CharField(max_length=20)
     description = models.TextField()
@@ -50,9 +57,10 @@ class Job(models.Model):
     min_gpa = models.FloatField()
     eligible_departments = models.ManyToManyField(Department)
 
-class Application(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    applied_on = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=3, choices=APPLICATION_STATUS_CHOICES, default='APL')
-    remarks = models.CharField(max_length=150, null=True, blank=True)
+    def number_of_applicants(self):
+        return Application.objects.filter(job=self).count()
+    
+    def applicants(self):
+        return Application.objects.filter(job=self)
+
+
