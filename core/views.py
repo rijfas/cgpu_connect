@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as login_user
 from django.contrib.auth.forms import AuthenticationForm
 from student.models import Student, AcademicQualification
+from recruiter.models import Recruiter
 from django.core.exceptions import ObjectDoesNotExist
 def login(request):
     if request.POST:
@@ -24,6 +25,8 @@ def login(request):
                     return redirect('student:register-basic-info')
                 return redirect('student:home')
             elif user.type == 'recruiter':
+                if not Recruiter.objects.filter(account=request.user).exists():
+                    return redirect('recruiter:register')
                 return redirect('recruiter:home')
 
         else:

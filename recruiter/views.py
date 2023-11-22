@@ -1,6 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .forms import RegisterRecruiterForm
 from core.decorators import login_required_with_type
 
+login_required_with_type('recruiter')
+def register(request):
+    if request.method == 'POST':
+        form = RegisterRecruiterForm(request.POST)
+        recruiter = form.save(commit=False)
+        recruiter.account = request.user 
+        if form.is_valid():
+            form.save()
+            return redirect('recruiter:home')
+    form = RegisterRecruiterForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'recruiter/register.html', context)
 
 login_required_with_type('recruiter')
 def home(request):
