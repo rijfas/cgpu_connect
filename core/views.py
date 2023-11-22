@@ -13,16 +13,10 @@ def login(request):
             if user.type == 'admin':
                 return redirect('cgpu_admin:home')
             elif user.type == 'student':
-                try:
-                    profile = Student.objects.get(account=request.user)
-                    
-                    try:
-                        AcademicQualification.objects.get(student=profile)
-                    except ObjectDoesNotExist:
-                        return redirect('student:add-academic-info')
-                    
-                except ObjectDoesNotExist:
+                if not Student.objects.filter(account=request.user).exists():
                     return redirect('student:register-basic-info')
+                if not AcademicQualification.objects.filter(student=Student.objects.get(account=request.user)).exists():
+                    return redirect('student:add-academic-info')
                 return redirect('student:home')
             elif user.type == 'recruiter':
                 if not Recruiter.objects.filter(account=request.user).exists():
