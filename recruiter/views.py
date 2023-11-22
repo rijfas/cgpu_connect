@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterRecruiterForm
+from .models import Recruiter
 from core.decorators import login_required_with_type
 
 login_required_with_type('recruiter')
@@ -24,7 +25,11 @@ def home(request):
 
 login_required_with_type('recruiter')
 def profile(request):
-    return render(request, 'recruiter/profile.html')
+    profile = Recruiter.objects.get(account=request.user)
+    context = {
+        'profile': profile
+    }
+    return render(request, 'recruiter/profile.html', context)
 
 login_required_with_type('recruiter')
 def jobs(request):
