@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import Account
 
-from student.models import Student, Department
+from student.models import Student, Course
 
 JOB_TYPE_CHOICES = (
     ('Internship', 'Internship'),
@@ -55,7 +55,7 @@ class Job(models.Model):
     maximum_backlogs = models.IntegerField(default=0)
     maximum_active_backlogs = models.IntegerField(default=0)
     min_gpa = models.FloatField()
-    eligible_departments = models.ManyToManyField(Department)
+    eligible_courses = models.ManyToManyField(Course)
 
     def number_of_applicants(self):
         return Application.objects.filter(job=self).count()
