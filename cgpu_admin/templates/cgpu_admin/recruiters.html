@@ -53,6 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for recruiter in recruiters %}
                             <tr class="bg-white border-b  hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
@@ -61,21 +62,22 @@
                                     </div>
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    Tata Elexsi
+                                    {{ recruiter.name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    hr@tataelexsi.com
+                                    {{ recruiter.email_id }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="" class="underline text-blue-500">www.tataelexsi.com</a>
+                                    <a href="{{ recruiter.website}}" target="_blank" class="underline text-blue-500">{{ recruiter.website}}</a>
                                 </td>
                                 <td class="px-6 py-4">
-                                    Active
+                                    {% if recruiter.account.is_active %}Active{% else %}Disabled{% endif %}
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                         <div class="absolute end-6 bottom-6 group">
                             <button type="button" class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800   focus:ring-4 focus:ring-blue-300 focus:outline-none ">

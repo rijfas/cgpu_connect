@@ -53,6 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for job in jobs %}
                             <tr class="bg-white border-b  hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
@@ -61,21 +62,22 @@
                                     </div>
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    Tata Elexsi
+                                    {{ job.recruiter.name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    Application Programmer
+                                    {{ job.role }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    Internship + Full-Time
+                                    {{ job.job_type }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    7.0 LPA
+                                    {{ job.ctc }} LPA
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                         <div class="absolute end-6 bottom-6 group">
                             <button type="button" class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800   focus:ring-4 focus:ring-blue-300 focus:outline-none ">

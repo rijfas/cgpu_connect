@@ -1,17 +1,32 @@
 from django.shortcuts import render, redirect
 from core.models import Account
-from student.models import Department
+from student.models import Student, Department
+from recruiter.models import Job, Recruiter
 from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
 
 @login_required_with_type('admin')
 def home(request):
-    return render(request, 'cgpu_admin/home.html')
+    students_count = Student.objects.all().count()
+    recruiters_count = Recruiter.objects.all().count()
+    jobs_count = Job.objects.all().count()
+    latest_recruiters = reversed(Recruiter.objects.all().order_by('-id')[:5])
+    context = {
+        'students_count': students_count,
+        'recruiters_count': recruiters_count,
+        'jobs_count': jobs_count,
+        'latest_recruiters': latest_recruiters,
+    }
+    return render(request, 'cgpu_admin/home.html', context)
 
 @login_required_with_type('admin')
 def students(request):
-    return render(request, 'cgpu_admin/students.html')
+    students = Student.objects.all()
+    context = {
+        'students': students
+    }
+    return render(request, 'cgpu_admin/students.html', context)
 
 @login_required_with_type('admin')
 def departments(request):
@@ -43,11 +58,19 @@ def create_department(request):
 
 @login_required_with_type('admin')
 def recruiters(request):
-    return render(request, 'cgpu_admin/recruiters.html')
+    recruiters = Recruiter.objects.all()
+    context = {
+        'recruiters': recruiters
+    }
+    return render(request, 'cgpu_admin/recruiters.html', context)
 
 @login_required_with_type('admin')
 def jobs(request):
-    return render(request, 'cgpu_admin/jobs.html')
+    jobs = Job.objects.all()
+    context = {
+        'jobs': jobs
+    }
+    return render(request, 'cgpu_admin/jobs.html', context)
 
 @login_required_with_type('admin')
 def shortlists(request):

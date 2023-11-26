@@ -53,6 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for student in students %}
                             <tr class="bg-white border-b  hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
@@ -61,21 +62,22 @@
                                     </div>
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    Rijfas
+                                    {{ student.first_name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    rijfas@gmail.com
+                                    {{ student.email_id }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    MCA
+                                    {{ student.department }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    Active
+                                   {% if student.account.is_active %}Active{% else %}Disabled{% endif %}
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
                                 </td>
                             </tr>
+                            {% endfor %}
 
                             
                         </tbody>
