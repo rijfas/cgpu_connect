@@ -52,9 +52,9 @@ class Job(models.Model):
     can_placed_students_apply = models.BooleanField()
     posted_date = models.DateTimeField(auto_now_add=True)
     application_deadline = models.DateTimeField()
-    maximum_backlogs = models.IntegerField(default=0)
-    maximum_active_backlogs = models.IntegerField(default=0)
-    min_gpa = models.FloatField()
+    maximum_backlogs = models.IntegerField(null=True, blank=True)
+    maximum_active_backlogs = models.IntegerField(null=True, blank=True)
+    min_gpa = models.FloatField(null=True, blank=True)
     eligible_courses = models.ManyToManyField(Course)
 
     def number_of_applicants(self):
