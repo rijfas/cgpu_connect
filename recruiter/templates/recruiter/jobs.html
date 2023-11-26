@@ -11,7 +11,158 @@
     <div class="flex flex-col w-full h-full">
        {% include "recruiter/navbar.html" %}
         <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
-                <h1>Jobs</h1>
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                    <tr>
+                        <th scope="col" class="p-4">
+                            <div class="flex items-center">
+                                <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  ">
+                                <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Role
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Post Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Number of applicants
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr class="bg-white border-b  hover:bg-gray-50">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  ">
+                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                            {{ job.role }}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{ job.posted_date }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ job.number_of_applicants }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="#" class="font-medium text-blue-600  hover:underline">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    
+                </tbody>
+            </table>
        </div>
+       <div class="absolute end-6 bottom-6 group">
+        
+        <button data-modal-target="add-job-modal" data-modal-toggle="add-job-modal" type="button" aria-controls="speed-dial-menu-default" aria-expanded="false" class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800   focus:ring-4 focus:ring-blue-300 focus:outline-none ">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+            </svg>
+            <span class="sr-only">Add Job</span>
+        </button>
+    </div>
+</div>
+<div id="add-job-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-4xl max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Create New Job
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  " data-modal-hide="add-job-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <form action="{% url "recruiter:create-job" %}" method="post" class="space-y-4" action="{% url "cgpu_admin:create_department" %}">
+                    {% csrf_token %}
+                    <div class="flex gap-2">
+                        <div class=" w-1/2">
+                            <label for="role" class="block mb-2 text-sm font-medium text-gray-900 ">Role <span class="text-red-500">*</span></label>
+                            <input type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Enter role" required>
+                        </div>
+                        <div class=" w-1/2">
+                            <label for="job_type" class="block mb-2 text-sm font-medium text-gray-900 ">Job Type <span class="text-red-500">*</span></label>
+                            <select name="job_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " required>
+                                {% for choice in form.fields.job_type.choices %}
+                                    <option value="{{choice.0}}">{{choice.1}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full">
+                        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 ">Job description <span class="text-red-500">*</span></label>
+                        <textarea name="description" rows="4" class="resize-none block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500      " placeholder="Enter job description" required></textarea>
+                    </div>
+
+                    <div class="flex items-start mb-5">
+                        <div class="flex items-center h-5">
+                          <input name="can_placed_students_apply" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 ">
+                        </div>
+                        <label for="can_placed_students_apply" class="ms-2 text-sm font-medium text-gray-900">Can placed students apply?</label>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <div class=" w-1/2">
+                            <label for="ctc" class="block mb-2 text-sm font-medium text-gray-900 ">CTC <span class="text-red-500">*</span></label>
+                            <input type="text" name="ctc" id="ctc" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Enter ctc" required>
+                        </div>
+                        <div class=" w-1/2">
+                            <label for="application_deadline" class="block mb-2 text-sm font-medium text-gray-900 ">Application deadline <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                  <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                  </svg>
+                                </div>
+                                <input name="application_deadline" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Select date" required>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class=" w-1/3">
+                            <label for="maximum_backlogs" class="block mb-2 text-sm font-medium text-gray-900 ">Maximum Backlogs </label>
+                            <input type="number" value="" name="maximum_backlogs" id="maximum_backlogs" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Enter number of bakclogs" >
+                        </div>
+                        <div class=" w-1/3">
+                            <label for="maximum_active_backlogs" class="block mb-2 text-sm font-medium text-gray-900 ">Maximum Active Backlogs </label>
+                            <input type="number" value="" name="maximum_active_backlogs" id="maximum_active_backlogs" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Enter number of active bakclogs" >
+                        </div>
+                        <div class=" w-1/3">
+                            <label for="min_gpa" class="block mb-2 text-sm font-medium text-gray-900 ">Minimum CGPA </label>
+                            <input type="text" name="min_gpa" id="min_gpa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    " placeholder="Enter number of active bakclogs" >
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Eligible Courses:</label>
+                        <div class="grid grid-cols-4">
+                            {% for course in courses %}
+                            <div class="flex items-center mb-4">
+                                <input name="eligible_course_{{course.id}}" type="checkbox" value="{{course.id}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                <label class="ms-2 text-xs text-gray-900">{{course.stream}} {{course.course}}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="max-w-min text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   ">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}
