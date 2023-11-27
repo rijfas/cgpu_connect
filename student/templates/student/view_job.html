@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="w-screen h-screen bg-slate-100  overflow-y-auto">
+    <div class="flex flex-col h-full max-w-6xl mx-auto bg-white p-10 rounded-lg">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+                <a href="{% url "student:jobs" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+
+                Jobs
+                </a>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                </svg>
+                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{job.recruiter}} : {{job.role}}</span>
+                </div>
+            </li>
+            </ol>
+        </nav>
+        <section class="bg-white ">
+            <div class="py-8 px-4 mx-auto max-w-screen-xl pt-14 lg:px-6">
+                <div class="flex justify-between items-center">
+                    <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
+                        <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">Recruitement by <span class="font-extrabold">{{job.recruiter}}</span></h2>
+                        <p class="font-light">{{job.description}}</p>
+                    </div>
+                    <div>
+                        <a type="button" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Apply Now</a>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white  antialiased">
+            <div class="max-w-screen-xl px-4 mx-auto">
+              <div class="max-w-3xl">
+                <h2 class="text-2xl font-semibold text-gray-900 ">
+                  Details
+                </h2>
+              </div>
+          
+              <div class="flow-root border rounded mt-5">
+                <div class="-my-4 divide-y divide-gray-200 ">
+                  <div class="flex flex-col mt-4 gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32 text-lg font-normal text-gray-500 sm:text-right  shrink-0">
+                      Role
+                    </p>
+                    <h3 class=" font-semibold text-gray-900 ">
+                        {{job.role}}
+                    </h3>
+                  </div>
+          
+                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                      Job Type
+                    </p>
+                    <h3 class=" font-semibold text-gray-900 ">
+                        {{job.job_type}}
+                    </h3>
+                  </div>
+
+                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                      CTC
+                    </p>
+                    <h3 class=" font-semibold text-gray-900 ">
+                        {{job.ctc}} LPA
+                    </h3>
+                  </div>
+
+                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                      Work Location
+                    </p>
+                    <h3 class=" font-semibold text-gray-900 ">
+                      <a href="#" class="hover:underline">Bergside LLC: Controlling the video traffic flows</a>
+                    </h3>
+                  </div>
+
+                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                      Job Description
+                    </p>
+                    <h3 class=" font-semibold text-gray-900 ">
+                      <a href="#" class="hover:underline">Bergside LLC: Controlling the video traffic flows</a>
+                    </h3>
+                  </div>
+
+                  <div class="flex mb-5 flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                      Application Deadline
+                    </p>
+                    <h3 class="text-lg font-semibold text-gray-900 ">
+                        {{job.application_deadline}}
+                    </h3>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </section>
+  
+    </div>
+</div>
+
+{% endblock content %}
