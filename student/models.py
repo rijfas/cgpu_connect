@@ -86,7 +86,7 @@ class Course(models.Model):
     course = models.CharField(max_length=150)
 
     def __str__(self):
-        return self.stream + ' ' + self.course
+        return f'{self.stream} {self.course}'
 
 class Student(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
@@ -115,11 +115,18 @@ class Student(models.Model):
     pending_arrears = models.IntegerField(default=0)
     cleared_arrears = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.first_name}'
+    
+
 class Result(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
     gpa = models.DecimalField(max_digits=5, decimal_places=3)
     is_failed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'result of {self.student} of {self.semester} : {self.gpa}'
 
 class AcademicQualification(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -128,6 +135,9 @@ class AcademicQualification(models.Model):
     year_of_pass = models.IntegerField()
     grade = models.DecimalField(max_digits=7, decimal_places=3)
     institution = models.CharField(max_length=150)
+
+    def __str__(self):
+        return f'qualififcation of {self.student} of {self.type_of_education} : {self.grade}'
 
 
 class Department(models.Model):

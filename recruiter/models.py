@@ -44,6 +44,9 @@ class Application(models.Model):
     applied_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=3, choices=APPLICATION_STATUS_CHOICES, default='APL')
     remarks = models.CharField(max_length=150, null=True, blank=True)
+
+    def __str__(self):
+        return f'for {self.job} by {self.student}'
 class Job(models.Model):
     is_open = models.BooleanField(default=True)
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
@@ -65,5 +68,8 @@ class Job(models.Model):
     
     def applicants(self):
         return Application.objects.filter(job=self)
+    
+    def __str__(self):
+        return f'{self.role} at {self.recruiter}'
 
 
