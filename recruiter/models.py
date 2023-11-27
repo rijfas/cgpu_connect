@@ -35,6 +35,9 @@ class Recruiter(models.Model):
     email_id = models.CharField(max_length=30, blank=False, null=False)
     website = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 class Application(models.Model):
     job = models.ForeignKey('Job', on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
