@@ -155,11 +155,69 @@ def create_department(request):
 
 @login_required_with_type('admin')
 def recruiters(request):
-    recruiters = Recruiter.objects.all()
+    search = request.GET.get('q')
+    recruiters = Recruiter.objects.filter(name__icontains=search) if search else Recruiter.objects.all() 
+    paginator = Paginator(recruiters, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'recruiters': recruiters
+        'search': search,
+        'recruiters': current_page.object_list,
+        'total_count': recruiters.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'cgpu_admin/recruiters.html', context)
+
+@login_required_with_type('admin')
+def view_recruiter(request, id):
+    recruiter = Recruiter.objects.get(id=id)
+    jobs = Job.objects.filter(recruiter=recruiter)
+
+    context = {
+        'recruiter': recruiter,
+        'jobs': jobs
+    }
+
+    return render(request, 'cgpu_admin/view_recruiter.html', context)
+
+@login_required_with_type('admin')
+def deactivate_recruiter_account(request, id):
+    recruiter = Recruiter.objects.get(id=id)
+    account = recruiter.account
+    account.is_active = False 
+    account.save()
+    return redirect('cgpu_admin:view_recruiter', recruiter.id)
+
+@login_required_with_type('admin')
+def activate_recruiter_account(request, id):
+    recruiter = Recruiter.objects.get(id=id)
+    account = recruiter.account
+    account.is_active = True 
+    account.save()
+    return redirect('cgpu_admin:view_recruiter', recruiter.id)
+
+@login_required_with_type('admin')
+def delete_recruiter_account(request, id):
+    recruiter = Recruiter.objects.get(id=id)
+    recruiter.account.delete()
+    recruiter.delete()
+    return redirect('cgpu_admin:recruiters')
+
+@login_required_with_type('admin')
+def change_recruiter_password(request, id):
+    recruiter = Recruiter.objects.get(id=id)
+    account = recruiter.account
+    account.set_password(request.POST['password'])
+    account.save()
+    return redirect('cgpu_admin:view_recruiter', recruiter.id)
+
 
 @login_required_with_type('admin')
 def jobs(request):
