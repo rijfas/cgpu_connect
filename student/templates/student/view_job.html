@@ -30,7 +30,9 @@
                         <p class="font-light">{{job.description}}</p>
                     </div>
                     <div>
-                        <a type="button" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Apply Now</a>
+                      {% if not job.is_already_applied %}
+                        <a href="{% url "student:apply_job" job.id %}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Apply Now</a>
+                      {% endif %}
 
                     </div>
                 </div>
@@ -38,6 +40,41 @@
         </section>
         <section class="bg-white  antialiased">
             <div class="max-w-screen-xl px-4 mx-auto">
+
+              {% if job.is_already_applied %}
+              <div class="max-w-3xl">
+                <h2 class="text-2xl font-semibold text-gray-900 ">
+                  Application Details
+                </h2>
+              </div>
+          
+              <div class="flow-root border rounded my-5">
+                <div class="-my-4 divide-y divide-gray-200 ">
+                  <div class="flex flex-col mt-4 gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32 text-lg font-normal text-gray-500 sm:text-right  shrink-0">
+                      Applied on:
+                    </p>
+                    <h3 class=" font-semibold text-gray-900 ">
+                        {{application.applied_on}}
+                    </h3>
+                  </div>
+          
+
+                  <div class="flex mb-5 flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                      Current Status
+                    </p>
+                    <h3 class="text-lg font-semibold text-gray-900 ">
+                        {{application.status}}
+                    </h3>
+                  </div>
+
+
+
+                </div>
+              </div>
+              {% endif %}
+
               <div class="max-w-3xl">
                 <h2 class="text-2xl font-semibold text-gray-900 ">
                   Details

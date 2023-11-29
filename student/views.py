@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from core.decorators import login_required_with_type
 from .forms import RegisterStudentForm
 from .models import Student, AcademicQualification
-from recruiter.models import Job
+from recruiter.models import Job, Application
 from django.core.exceptions import ObjectDoesNotExist
 
 login_required_with_type('student')
@@ -76,6 +76,13 @@ login_required_with_type('student')
 def jobs(request):
     student = Student.objects.get(account=request.user)
     jobs = Job.objects.filter(eligible_courses=student.course)
+    applied_jobs = [application.job for application in Application.objects.filter(student=student)]
+    for job in jobs:
+        if job in applied_jobs:
+            job.is_already_applied = True 
+        else:
+            job.is_already_applied = False
+
     context = {
         'jobs': jobs
     }
@@ -83,11 +90,26 @@ def jobs(request):
 
 login_required_with_type('student')
 def view_job(request, id):
+    student = Student.objects.get(account=request.user)
     job = Job.objects.get(id=id)
+    try:
+        application = Application.objects.get(job=job, student=student)
+        job.is_already_applied = True
+    except ObjectDoesNotExist:
+        application = None
+        job.is_already_applied = False
     context = {
-        'job': job
+        'job': job,
+        'application': application,
     }
     return render(request, 'student/view_job.html', context)
+
+login_required_with_type('student')
+def apply_job(request, id):
+    student = Student.objects.get(account=request.user)
+    job = Job.objects.get(id=id)
+    Application.objects.create(job=job, student=student)
+    return redirect('student:jobs')
 
 login_required_with_type('student')
 def applications(request):
