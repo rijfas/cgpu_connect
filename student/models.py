@@ -91,13 +91,6 @@ class Course(models.Model):
     def __str__(self):
         return f'{self.stream} {self.course}'
 
-class Class(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    className = models.CharField(max_length=5)
-
-    def __str__(self):
-        return f"{self.className} {self.course.course}"
-
 class Student(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=150)
@@ -117,7 +110,6 @@ class Student(models.Model):
     email_id = models.CharField(max_length=150)
     department = models.ForeignKey('Department', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    section = models.ForeignKey(Class, on_delete=models.CASCADE)
     entrance_type = models.CharField(max_length=50, null=True, blank=True, choices=ENTRANCE_TYPE_CHOICES)
     entrance_rank = models.IntegerField(null=True,blank=True)
     year_of_pass = models.IntegerField()
