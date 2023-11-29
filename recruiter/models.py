@@ -47,6 +47,15 @@ class Application(models.Model):
 
     def __str__(self):
         return f'for {self.job} by {self.student}'
+    
+class Shortlist(models.Model):
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    applications = models.ManyToManyField(Application)
+
+    def students(self):
+        return [application.student for application in self.applications]
+
+
 class Job(models.Model):
     is_open = models.BooleanField(default=True)
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
