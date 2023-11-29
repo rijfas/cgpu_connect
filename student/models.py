@@ -85,6 +85,9 @@ class Course(models.Model):
     stream = models.CharField(max_length=10, choices=STREAM_CHOICE)
     course = models.CharField(max_length=150)
 
+    def students(self):
+        return Student.objects.filter(course=self).count()
+    
     def __str__(self):
         return f'{self.stream} {self.course}'
 
