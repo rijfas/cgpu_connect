@@ -51,6 +51,7 @@ class Application(models.Model):
 class Shortlist(models.Model):
     job = models.ForeignKey('Job', on_delete=models.CASCADE)
     applications = models.ManyToManyField(Application)
+    is_published = models.BooleanField(default=False)
 
     def students(self):
         return [application.student for application in self.applications]
