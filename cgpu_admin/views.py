@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from core.models import Account
-from student.models import Student, Department
+from django.core.exceptions import ObjectDoesNotExist
+from student.models import Student, Department, AcademicQualification
 from recruiter.models import Job, Recruiter
 from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
+from django.contrib.auth.hashers import make_password
 
 @login_required_with_type('admin')
 def home(request):
@@ -23,10 +25,72 @@ def home(request):
 @login_required_with_type('admin')
 def students(request):
     students = Student.objects.all()
+    search = request.GET.get('q')
+    students = Student.objects.filter(first_name__icontains=search) if search else Student.objects.all() 
+    paginator = Paginator(students, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'students': students
+        'search': search,
+        'students': current_page.object_list,
+        'total_count': students.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'cgpu_admin/students.html', context)
+
+@login_required_with_type('admin')
+def view_student(request, id):
+    student = Student.objects.get(id=id)
+    try:
+        ug = AcademicQualification.objects.get(student=student, type_of_education='UG')
+    except ObjectDoesNotExist:
+        ug = None
+    context = {
+        'student': student,
+        'hsc': AcademicQualification.objects.get(student=student, type_of_education='HSC'),
+        'ssc': AcademicQualification.objects.get(student=student, type_of_education='SSC'),
+        'ug': ug,
+    }
+    return render(request, 'cgpu_admin/view_student.html', context)
+
+@login_required_with_type('admin')
+def deactivate_student_account(request, id):
+    student = Student.objects.get(id=id)
+    account = student.account
+    account.is_active = False 
+    account.save()
+    return redirect('cgpu_admin:view_student', student.id)
+
+@login_required_with_type('admin')
+def activate_student_account(request, id):
+    student = Student.objects.get(id=id)
+    account = student.account
+    account.is_active = True 
+    account.save()
+    return redirect('cgpu_admin:view_student', student.id)
+
+@login_required_with_type('admin')
+def delete_student_account(request, id):
+    student = Student.objects.get(id=id)
+    student.account.delete()
+    student.delete()
+    return redirect('cgpu_admin:students')
+
+@login_required_with_type('admin')
+def change_student_password(request, id):
+    student = Student.objects.get(id=id)
+    account = student.account
+    account.set_password(request.POST['password'])
+    account.save()
+    return redirect('cgpu_admin:view_student', student.id)
+
 
 @login_required_with_type('admin')
 def departments(request):
