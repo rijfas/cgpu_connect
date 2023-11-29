@@ -63,7 +63,7 @@
                                     {{ department.students }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
+                                    <a href="{% url "cgpu_admin:view_department" department.id %}" class="font-medium text-blue-600  hover:underline">View</a>
                                 </td>
                             </tr>
                             {% endfor %}

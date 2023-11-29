@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from core.models import Account
 from django.core.exceptions import ObjectDoesNotExist
-from student.models import Student, Department, AcademicQualification
+from student.models import Student, Department, AcademicQualification, Course, STREAM_CHOICE
 from recruiter.models import Job, Recruiter
 from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
@@ -113,6 +113,39 @@ def departments(request):
         'current_page_number': current_page_number,
     }
     return render(request, 'cgpu_admin/departments.html', context)
+
+@login_required_with_type('admin')
+def view_department(request, id):
+    department = Department.objects.get(id=id)
+    courses = Course.objects.filter(department=department)
+    students = Student.objects.filter(department=department)
+    streams = STREAM_CHOICE
+    context = {
+        'department': department,
+        'courses': courses,
+        'students': students,
+        'streams': streams,
+
+    }
+    return render(request, 'cgpu_admin/view_department.html', context)
+
+@login_required_with_type('admin')
+def delete_department(request, id):
+    department = Department.objects.get(id=id)
+    department.delete()
+    return redirect('cgpu_admin:departments')
+
+@login_required_with_type('admin')
+def create_course(request, id):
+    department = Department.objects.get(id=id)
+    Course.objects.create(department=department, course=request.POST['name'], stream=request.POST['stream'])
+    return redirect('cgpu_admin:view_department', id)
+
+@login_required_with_type('admin')
+def delete_course(request, id, course_id):
+    course = Course.objects.get(id=course_id)
+    course.delete()
+    return redirect('cgpu_admin:view_department', id)
 
 @login_required_with_type('admin')
 def create_department(request):
