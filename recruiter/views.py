@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterRecruiterForm, AddJobForm
-from .models import Recruiter, Job
+from .models import Recruiter, Job, Application, Shortlist
 from student.models import Course
 from core.decorators import login_required_with_type
 
@@ -46,6 +46,18 @@ def jobs(request):
     return render(request, 'recruiter/jobs.html', context)
 
 login_required_with_type('recruiter')
+def view_job(request, id):
+    job = Job.objects.get(id=id)
+    shortlist = Shortlist.objects.filter(job=job)
+    job.is_shortlist_created = len(shortlist) != 0
+    applications = Application.objects.filter(job=job)
+    context = {
+        'job': job,
+        'applications': applications
+    }
+    return render(request, 'recruiter/view_job.html', context)
+
+login_required_with_type('recruiter')
 def create_job(request):
     profile = Recruiter.objects.get(account=request.user)
     job = Job(
@@ -68,8 +80,50 @@ def create_job(request):
     return redirect('recruiter:jobs')
 
 login_required_with_type('recruiter')
+def view_shortlist(request, id):
+    job = Job.objects.get(id=id)
+    applications = Application.objects.filter(job=job)
+    shortlist, _ = Shortlist.objects.get_or_create(job=job)
+    shortlisted_applications = shortlist.applications.all()
+    applied_applications = [application for application in applications if application not in shortlisted_applications]
+
+    context = {
+        'job': job,
+        'shortlist': shortlist,
+        'shortlisted_applications': shortlisted_applications,
+        'applied_applications': applied_applications
+    }
+    return render(request, 'recruiter/view_shortlist.html', context)
+
+login_required_with_type('recruiter')
+def add_to_shortlist(request, id):
+    application = Application.objects.get(id=id)
+    shortlist = Shortlist.objects.get(job=application.job)
+    shortlist.applications.add(application)
+    return redirect('recruiter:view_shortlist', application.job.id)
+
+login_required_with_type('recruiter')
+def remove_from_shortlist(request, id):
+    application = Application.objects.get(id=id)
+    shortlist = Shortlist.objects.get(job=application.job)
+    shortlist.applications.remove(application)
+    return redirect('recruiter:view_shortlist', application.job.id)
+
+login_required_with_type('recruiter')
+def publish_shortlist(request, id):
+    shortlist = Shortlist.objects.get(job=id)
+    shortlist.is_published = True 
+    shortlist.save()
+    return redirect('recruiter:view_shortlist', id)
+
+login_required_with_type('recruiter')
 def shortlists(request):
-    return render(request, 'recruiter/shortlists.html')
+    recruiter = Recruiter.objects.get(account=request.user)
+    shortlists = Shortlist.objects.filter(job__recruiter=recruiter)
+    context = {
+        'shortlists': shortlists
+    }
+    return render(request, 'recruiter/shortlists.html', context)
 
 login_required_with_type('recruiter')
 def messages(request):
