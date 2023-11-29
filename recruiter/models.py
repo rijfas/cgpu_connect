@@ -54,7 +54,7 @@ class Shortlist(models.Model):
     is_published = models.BooleanField(default=False)
 
     def students(self):
-        return [application.student for application in self.applications]
+        return [application.student for application in self.applications.all()]
 
 
 class Job(models.Model):
