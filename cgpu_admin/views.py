@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from core.models import Account
 from django.core.exceptions import ObjectDoesNotExist
 from student.models import Student, Department, AcademicQualification, Course, STREAM_CHOICE
-from recruiter.models import Job, Recruiter
+from recruiter.models import Job, Recruiter, Application
 from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
@@ -221,11 +221,35 @@ def change_recruiter_password(request, id):
 
 @login_required_with_type('admin')
 def jobs(request):
-    jobs = Job.objects.all()
+    search = request.GET.get('q')
+    jobs = Job.objects.filter(recruiter__name__icontains=search) if search else Job.objects.all() 
+    paginator = Paginator(jobs, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'jobs': jobs
+        'search': search,
+        'jobs': current_page.object_list,
+        'total_count': jobs.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'cgpu_admin/jobs.html', context)
+
+login_required_with_type('admin')
+def view_job(request, id):
+    job = Job.objects.get(id=id)
+    applications = Application.objects.filter(job=job)
+    context = {
+        'job': job,
+        'applications': applications
+    }
+    return render(request, 'cgpu_admin/view_job.html', context)
 
 @login_required_with_type('admin')
 def shortlists(request):
