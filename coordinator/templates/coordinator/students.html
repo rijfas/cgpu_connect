@@ -12,6 +12,11 @@
        {% include "coordinator/navbar.html" %}
         <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
                 <h1>Students</h1>
+                <ul>
+                    {% for student in students %}
+                        <li>{{ student.first_name }}</li>
+                    {% endfor %}
+                </ul>
        </div>
 </div>
 {% endblock content %}
