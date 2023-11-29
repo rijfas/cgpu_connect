@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import Account
 
-from student.models import Student, Department
+from student.models import Student, Course
 
 JOB_TYPE_CHOICES = (
     ('Internship', 'Internship'),
@@ -35,7 +35,20 @@ class Recruiter(models.Model):
     email_id = models.CharField(max_length=30, blank=False, null=False)
     website = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
+class Application(models.Model):
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    applied_on = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=3, choices=APPLICATION_STATUS_CHOICES, default='APL')
+    remarks = models.CharField(max_length=150, null=True, blank=True)
+
+    def __str__(self):
+        return f'for {self.job} by {self.student}'
 class Job(models.Model):
+    is_open = models.BooleanField(default=True)
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     role = models.CharField(max_length=20)
     description = models.TextField()
@@ -45,14 +58,18 @@ class Job(models.Model):
     can_placed_students_apply = models.BooleanField()
     posted_date = models.DateTimeField(auto_now_add=True)
     application_deadline = models.DateTimeField()
-    maximum_backlogs = models.IntegerField(default=0)
-    maximum_active_backlogs = models.IntegerField(default=0)
-    min_gpa = models.FloatField()
-    eligible_departments = models.ManyToManyField(Department)
+    maximum_backlogs = models.IntegerField(null=True, blank=True)
+    maximum_active_backlogs = models.IntegerField(null=True, blank=True)
+    min_gpa = models.FloatField(null=True, blank=True)
+    eligible_courses = models.ManyToManyField(Course)
 
-class Application(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    applied_on = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=3, choices=APPLICATION_STATUS_CHOICES, default='APL')
-    remarks = models.CharField(max_length=150, null=True, blank=True)
+    def number_of_applicants(self):
+        return Application.objects.filter(job=self).count()
+    
+    def applicants(self):
+        return Application.objects.filter(job=self)
+    
+    def __str__(self):
+        return f'{self.role} at {self.recruiter}'
+
+

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from core.decorators import login_required_with_type
 from .forms import RegisterStudentForm
 from .models import Student, AcademicQualification
+from recruiter.models import Job
 from django.core.exceptions import ObjectDoesNotExist
 
 login_required_with_type('student')
@@ -49,7 +50,12 @@ def add_academic_info(request):
 
 login_required_with_type('student')
 def home(request):
-    return render(request, 'student/home.html')
+    student = Student.objects.get(account=request.user)
+    jobs = Job.objects.filter(eligible_courses=student.course).order_by('-id')[:5]
+    context = {
+        'jobs': jobs
+    }
+    return render(request, 'student/home.html', context)
 
 login_required_with_type('student')
 def profile(request):
@@ -68,7 +74,20 @@ def profile(request):
 
 login_required_with_type('student')
 def jobs(request):
-    return render(request, 'student/jobs.html')
+    student = Student.objects.get(account=request.user)
+    jobs = Job.objects.filter(eligible_courses=student.course)
+    context = {
+        'jobs': jobs
+    }
+    return render(request, 'student/jobs.html', context)
+
+login_required_with_type('student')
+def view_job(request, id):
+    job = Job.objects.get(id=id)
+    context = {
+        'job': job
+    }
+    return render(request, 'student/view_job.html', context)
 
 login_required_with_type('student')
 def applications(request):

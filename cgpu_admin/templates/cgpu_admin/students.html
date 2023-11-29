@@ -12,18 +12,12 @@
             <div class="flex flex-col w-full h-full p-5 bg-white rounded-l-xl">
                 <div class="flex items-center justify-between">
                     <h1 class="text-lg font-semibold underline">Students</h1>
-                    <div class=" bg-white items-center">
-                        <label for="table-search" class="sr-only">Search</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                </svg>
-                            </div>
-                            <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search students">
-                        </div>
+                    <div class="flex gap-2 justify-end items-center">
+                        {% if search %}
+                        <span class="text-sm text-gray-400">showing results for "{{search}}" (<a href="{% url "cgpu_admin:students" %}" class="underline">clear</a>)</span>
+                        {% endif %}
+                        {% include "cgpu_admin/search_bar.html" %}
                     </div>
-
                 </div>
                 <div class="relative h-full overflow-x-hidden overflow-y-auto mt-5 shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -53,6 +47,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for student in students %}
                             <tr class="bg-white border-b  hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
@@ -61,53 +56,30 @@
                                     </div>
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    Rijfas
+                                    {{ student.first_name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    rijfas@gmail.com
+                                    {{ student.email_id }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    MCA
+                                    {{ student.department }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    Active
+                                   {% if student.account.is_active %}Active{% else %}Disabled{% endif %}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
+                                    <a href="{% url "cgpu_admin:view_student" student.id %}" class="font-medium text-blue-600  hover:underline">View</a>
                                 </td>
                             </tr>
+                            {% endfor %}
 
                             
                         </tbody>
                     </table>
                 </div>
                 
-                <nav class="pb-2 flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-                    <span class="text-sm font-normal text-gray-500  mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 ">1-10</span> of <span class="font-semibold text-gray-900 ">1000</span></span>
-                    <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700     ">Previous</a>
-                        </li>
-                        <li>
-                            <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700   ">1</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">2</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">3</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">4</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700     ">5</a>
-                        </li>
-                        <li>
-                    <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700     ">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                {% include "cgpu_admin/pagination.html" %}
+
 
             </div>
        </div>
