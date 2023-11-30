@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from core.decorators import login_required_with_type
 from .forms import RegisterStudentForm
 from .models import Student, AcademicQualification
+from cgpu_admin.models import Announcement
 from recruiter.models import Job, Application
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -52,8 +53,11 @@ login_required_with_type('student')
 def home(request):
     student = Student.objects.get(account=request.user)
     jobs = Job.objects.filter(eligible_courses=student.course).order_by('-id')[:5]
+    announcements = Announcement.objects.all().order_by('-id')[:5]
+
     context = {
-        'jobs': jobs
+        'jobs': jobs,
+        'announcements': announcements
     }
     return render(request, 'student/home.html', context)
 
@@ -122,5 +126,9 @@ def applications(request):
 
 login_required_with_type('student')
 def notifications(request):
-    return render(request, 'student/notifications.html')
+    announcements = Announcement.objects.all()
+    context = {
+        'announcements': announcements
+    }
+    return render(request, 'student/notifications.html', context)
 
