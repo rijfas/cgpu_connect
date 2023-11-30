@@ -11,7 +11,56 @@
     <div class="flex flex-col w-full h-full">
        {% include "student/navbar.html" %}
         <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
-                <h1>Applications</h1>
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                        <tr>
+                            <th scope="col" class="p-4">
+                                <div class="flex items-center">
+                                    <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  ">
+                                    <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Role
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Applied Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Current Status
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in applications %}
+                        <tr class="bg-white border-b  hover:bg-gray-50">
+                            <td class="w-4 p-4">
+                                <div class="flex items-center">
+                                    <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  ">
+                                    <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                </div>
+                            </td>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                                {{ application.job.role }}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ application.applied_on }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ application.status }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="{% url "student:view_job" application.job.id %}" class="font-medium text-blue-600  hover:underline">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+    
+                        
+                    </tbody>
+                </table>
        </div>
 </div>
 {% endblock content %}

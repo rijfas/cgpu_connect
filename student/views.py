@@ -113,7 +113,12 @@ def apply_job(request, id):
 
 login_required_with_type('student')
 def applications(request):
-    return render(request, 'student/applications.html')
+    student = Student.objects.get(account=request.user)
+    applications = Application.objects.filter(student=student)
+    context = {
+        'applications': applications
+    }
+    return render(request, 'student/applications.html', context)
 
 login_required_with_type('student')
 def notifications(request):
