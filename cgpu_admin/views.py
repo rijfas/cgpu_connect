@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from core.models import Account
 from django.core.exceptions import ObjectDoesNotExist
 from student.models import Student, Department, AcademicQualification, Course, STREAM_CHOICE
-from recruiter.models import Job, Recruiter, Application
+from recruiter.models import Job, Recruiter, Application, Shortlist
 from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
@@ -245,6 +245,8 @@ login_required_with_type('admin')
 def view_job(request, id):
     job = Job.objects.get(id=id)
     applications = Application.objects.filter(job=job)
+    shortlist = Shortlist.objects.filter(job=job)
+    job.is_shortlist_created = len(shortlist) != 0
     context = {
         'job': job,
         'applications': applications
@@ -253,7 +255,41 @@ def view_job(request, id):
 
 @login_required_with_type('admin')
 def shortlists(request):
-    return render(request, 'cgpu_admin/shortlists.html')
+    search = request.GET.get('q')
+    shortlists = Shortlist.objects.filter(job__recruiter__name__icontains=search, is_published=True) if search else Shortlist.objects.filter(is_published=True) 
+    paginator = Paginator(shortlists, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
+    context = {
+        'search': search,
+        'shortlists': current_page.object_list,
+        'total_count': shortlists.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
+    }
+    return render(request, 'cgpu_admin/shortlists.html', context)
+
+login_required_with_type('admin')
+def view_shortlist(request, id):
+    job = Job.objects.get(id=id)
+    applications = Application.objects.filter(job=job)
+    shortlist = Shortlist.objects.get(job=job)
+    shortlisted_applications = shortlist.applications.all()
+    applied_applications = [application for application in applications if application not in shortlisted_applications]
+
+    context = {
+        'job': job,
+        'shortlist': shortlist,
+        'shortlisted_applications': shortlisted_applications,
+        'applied_applications': applied_applications
+    }
+    return render(request, 'cgpu_admin/view_shortlist.html', context)
 
 @login_required_with_type('admin')
 def learning(request):

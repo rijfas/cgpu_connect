@@ -26,6 +26,7 @@ urlpatterns = [
     path('jobs/', views.jobs, name='jobs'),
     path('jobs/<int:id>', views.view_job, name='view_job'),
     path('shortlists/', views.shortlists, name='shortlists'),
+    path('shortlists/<int:id>/', views.view_shortlist, name='view_shortlist'),
     path('learning/', views.learning, name='learning'),
     path('announcements/', views.announcements, name='announcements'),
     path('accounts/', views.accounts, name='accounts'),

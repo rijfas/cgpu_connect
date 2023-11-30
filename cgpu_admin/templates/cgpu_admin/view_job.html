@@ -24,9 +24,14 @@
         </nav>
         <section class="bg-white ">
             <div class="py-8 px-4 mx-auto max-w-screen-xl pt-14 lg:px-6">
-              <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
-                <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">Recruitement by <span class="font-extrabold">{{job.recruiter}}</span></h2>
-                <p class="font-light">{{job.description}}</p>
+              <div class="flex justify-between items-center">
+                <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
+                  <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">Recruitement by <span class="font-extrabold">{{job.recruiter}}</span></h2>
+                  <p class="font-light">{{job.description}}</p>
+                </div>
+                {% if job.is_shortlist_created %}
+                  <a href="{% url "cgpu_admin:view_shortlist" job.id %}" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">View Shortlist</a>
+                {% endif %}
               </div>
             </div>
         </section>
