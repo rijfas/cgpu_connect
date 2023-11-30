@@ -12,5 +12,4 @@ urlpatterns = [
     path('jobs/<int:id>/apply/', views.apply_job, name='apply_job'),
     path('applications/', views.applications, name='applications'),
     path('notifications/', views.notifications, name='notifications'),
-    path('learning/', views.learning, name='learning'),
 ]

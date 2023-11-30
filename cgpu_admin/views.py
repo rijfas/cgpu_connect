@@ -291,9 +291,6 @@ def view_shortlist(request, id):
     }
     return render(request, 'cgpu_admin/view_shortlist.html', context)
 
-@login_required_with_type('admin')
-def learning(request):
-    return render(request, 'cgpu_admin/learning.html')
 
 @login_required_with_type('admin')
 def announcements(request):

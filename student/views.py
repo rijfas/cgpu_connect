@@ -119,6 +119,3 @@ login_required_with_type('student')
 def notifications(request):
     return render(request, 'student/notifications.html')
 
-login_required_with_type('student')
-def learning(request):
-    return render(request, 'student/learning.html')
