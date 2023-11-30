@@ -7,6 +7,7 @@ from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password
+from .models import Announcement
 
 @login_required_with_type('admin')
 def home(request):
@@ -294,7 +295,22 @@ def view_shortlist(request, id):
 
 @login_required_with_type('admin')
 def announcements(request):
-    return render(request, 'cgpu_admin/announcements.html')
+    announcements = Announcement.objects.all()
+    context = {
+        'announcements': announcements
+    }
+    return render(request, 'cgpu_admin/announcements.html', context)
+
+@login_required_with_type('admin')
+def create_announcement(request):
+    Announcement.objects.create(title=request.POST['title'], description=request.POST['description'])
+    return redirect('cgpu_admin:announcements')
+
+@login_required_with_type('admin')
+def delete_announcement(request, id):
+    announcement = Announcement.objects.get(id=id)
+    announcement.delete()
+    return redirect('cgpu_admin:announcements')
 
 @login_required_with_type('admin')
 def accounts(request):
