@@ -56,6 +56,7 @@ class Application(models.Model):
         return f'for {self.job} by {self.student}'
     
 class Shortlist(models.Model):
+    recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     job = models.ForeignKey('Job', on_delete=models.CASCADE)
     type = models.CharField(max_length=3, choices=SHORTLIST_TYPE_CHOICES, default='VRF')
     applications = models.ManyToManyField(Application)

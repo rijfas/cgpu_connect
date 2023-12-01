@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterRecruiterForm, AddJobForm
-from .models import Recruiter, Job, Application, Shortlist
+from .models import Recruiter, Job, Application, Shortlist, SHORTLIST_TYPE_CHOICES
 from core.models import Account, Message
 from student.models import Course
 from core.decorators import login_required_with_type
 from django.db.models import Q
+from django.core.paginator import Paginator
+
 
 
 login_required_with_type('recruiter')
@@ -49,22 +51,50 @@ def profile(request):
 login_required_with_type('recruiter')
 def jobs(request):
     profile = Recruiter.objects.get(account=request.user)
-    jobs = Job.objects.filter(recruiter=profile)
     courses = Course.objects.all()
     form = AddJobForm()
+    search = request.GET.get('q')
+    jobs = Job.objects.filter(Q(role__icontains=search)&Q(recruiter=profile)) if search else Job.objects.filter(recruiter=profile) 
+    paginator = Paginator(jobs, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'jobs': jobs,
         'form': form,
         'courses': courses,
+        'search': search,
+        'jobs': current_page.object_list,
+        'total_count': jobs.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'recruiter/jobs.html', context)
 
 login_required_with_type('recruiter')
 def applications(request):
     profile = Recruiter.objects.get(account=request.user)
-    applications = Application.objects.filter(job__recruiter=profile)
+    search = request.GET.get('q')
+    applications = Application.objects.filter(Q(job__recruiter=profile) & Q(student__first_name__icontains=search)) if search else Application.objects.filter(job__recruiter=profile) 
+    paginator = Paginator(applications, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'applications': applications
+        'search': search,
+        'applications': current_page.object_list,
+        'total_count': applications.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'recruiter/applications.html', context)
 
@@ -82,9 +112,13 @@ def view_job(request, id):
     shortlist = Shortlist.objects.filter(job=job)
     job.is_shortlist_created = len(shortlist) != 0
     applications = Application.objects.filter(job=job)
+    shortlists = Shortlist.objects.filter(job=job)
     context = {
         'job': job,
-        'applications': applications
+        'applications': applications,
+        'shortlists': shortlists,
+        'shortlist_types': SHORTLIST_TYPE_CHOICES,
+
     }
     return render(request, 'recruiter/view_job.html', context)
 
@@ -112,9 +146,9 @@ def create_job(request):
 
 login_required_with_type('recruiter')
 def view_shortlist(request, id):
-    job = Job.objects.get(id=id)
+    shortlist = Shortlist.objects.get(id=id)
+    job = Job.objects.get(id=shortlist.job.id)
     applications = Application.objects.filter(job=job)
-    shortlist, _ = Shortlist.objects.get_or_create(job=job)
     shortlisted_applications = shortlist.applications.all()
     applied_applications = [application for application in applications if application not in shortlisted_applications]
 
@@ -127,22 +161,22 @@ def view_shortlist(request, id):
     return render(request, 'recruiter/view_shortlist.html', context)
 
 login_required_with_type('recruiter')
-def add_to_shortlist(request, id):
-    application = Application.objects.get(id=id)
-    shortlist = Shortlist.objects.get(job=application.job)
+def add_to_shortlist(request, id, application_id):
+    shortlist = Shortlist.objects.get(id=id)
+    application = Application.objects.get(id=application_id)
     shortlist.applications.add(application)
-    return redirect('recruiter:view_shortlist', application.job.id)
+    return redirect('recruiter:view_shortlist', id)
 
 login_required_with_type('recruiter')
-def remove_from_shortlist(request, id):
-    application = Application.objects.get(id=id)
+def remove_from_shortlist(request, id, application_id):
+    application = Application.objects.get(id=application_id)
     shortlist = Shortlist.objects.get(job=application.job)
     shortlist.applications.remove(application)
-    return redirect('recruiter:view_shortlist', application.job.id)
+    return redirect('recruiter:view_shortlist', id)
 
 login_required_with_type('recruiter')
 def publish_shortlist(request, id):
-    shortlist = Shortlist.objects.get(job=id)
+    shortlist = Shortlist.objects.get(id=id)
     shortlist.is_published = True 
     shortlist.save()
     return redirect('recruiter:view_shortlist', id)
@@ -150,11 +184,42 @@ def publish_shortlist(request, id):
 login_required_with_type('recruiter')
 def shortlists(request):
     recruiter = Recruiter.objects.get(account=request.user)
-    shortlists = Shortlist.objects.filter(job__recruiter=recruiter)
+    jobs = Job.objects.filter(recruiter=recruiter)
+    search = request.GET.get('q')
+    shortlists = Shortlist.objects.filter(Q(job__recruiter=recruiter) & Q(job__role__icontains=search)) if search else Shortlist.objects.filter(job__recruiter=recruiter) 
+    paginator = Paginator(shortlists, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
     context = {
-        'shortlists': shortlists
+        'search': search,
+        'jobs': jobs,
+        'shortlist_types': SHORTLIST_TYPE_CHOICES,
+        'shortlists': current_page.object_list,
+        'total_count': shortlists.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
     }
     return render(request, 'recruiter/shortlists.html', context)
+
+
+login_required_with_type('recruiter')
+def delete_shortlist(request, id):
+    shortlist = Shortlist.objects.get(id=id)
+    shortlist.delete() 
+    return redirect('recruiter:shortlists')
+
+login_required_with_type('recruiter')
+def create_shortlist(request):
+    recruiter = Recruiter.objects.get(account=request.user)
+    job = Job.objects.get(id=int(request.POST['job']))
+    Shortlist.objects.create(recruiter=recruiter,job=job, type=request.POST['type']) 
+    return redirect('recruiter:shortlists')
 
 login_required_with_type('recruiter')
 def messages(request):
