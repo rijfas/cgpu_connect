@@ -2,172 +2,172 @@
 {% load static %}
 
 {% block content %}
-
-<div class="w-screen h-screen bg-slate-100  overflow-y-auto">
-    <div class="flex flex-col h-full max-w-6xl mx-auto  overflow-y-auto bg-white p-10 rounded-lg">
+<div class="w-screen h-screen flex bg-slate-100">
+  {% include "recruiter/sidebar.html" %}
+  <div class="flex flex-col w-full h-full">
+     {% include "recruiter/navbar.html" %}
+      <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
         <nav class="flex" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-            <li class="inline-flex items-center">
-                <a href="{% url "recruiter:jobs" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                Jobs
-                </a>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                </svg>
-                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{job.recruiter}} : {{job.role}}</span>
-                </div>
-            </li>
-            </ol>
-        </nav>
-        <section class="bg-white ">
-          <div class="py-8 px-4 mx-auto max-w-screen-xl pt-14 lg:px-6">
-            <div class="flex justify-between items-center">
-                <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
-                  <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">{{job.role}}</span></h2>
-                  <p class="font-light">{{job.description}}</p>
-                </div>
-                {% if not job.is_shortlist_created %}
-                <a href="{% url "recruiter:view_shortlist" job.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Release Shortlist</a>
-                {% else %}
-                <a href="{% url "recruiter:view_shortlist" job.id %}" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">View Shortlist</a>
-                {% endif %}
+          <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+          <li class="inline-flex items-center">
+              <a href="{% url "recruiter:jobs" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+              Jobs
+              </a>
+          </li>
+          <li aria-current="page">
+              <div class="flex items-center">
+              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+              <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 "> {{job.role}}</span>
               </div>
+          </li>
+          </ol>
+      </nav>
+      <section class="bg-white ">
+        <div class="pb-8 pt-4 px-4 mx-auto max-w-screen-xl lg:px-6">
+          <div class="flex justify-between items-center">
+              <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
+                <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">{{job.role}}</span></h2>
+                <p class="font-light">{{job.description}}</p>
+              </div>
+              {% if not job.is_shortlist_created %}
+              <a href="{% url "recruiter:view_shortlist" job.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Release Shortlist</a>
+              {% else %}
+              <a href="{% url "recruiter:view_shortlist" job.id %}" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">View Shortlist</a>
+              {% endif %}
             </div>
+          </div>
+      </section>
+      <section class="bg-white  antialiased">
+          <div class="max-w-screen-xl px-4 mx-auto">
+            <div class="max-w-3xl">
+              <h2 class="text-2xl font-semibold text-gray-900 ">
+                Details
+              </h2>
+            </div>
+        
+            <div class="flow-root border rounded mt-5">
+              <div class="-my-4 divide-y divide-gray-200 ">
+                <div class="flex flex-col mt-4 gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                  <p class="w-32 text-lg font-normal text-gray-500 sm:text-right  shrink-0">
+                    Role
+                  </p>
+                  <h3 class=" font-semibold text-gray-900 ">
+                      {{job.role}}
+                  </h3>
+                </div>
+        
+                <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                  <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                    Job Type
+                  </p>
+                  <h3 class=" font-semibold text-gray-900 ">
+                      {{job.job_type}}
+                  </h3>
+                </div>
+
+                <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                  <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                    CTC
+                  </p>
+                  <h3 class=" font-semibold text-gray-900 ">
+                      {{job.ctc}} LPA
+                  </h3>
+                </div>
+
+                <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                  <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                    Work Location
+                  </p>
+                  <h3 class=" font-semibold text-gray-900 ">
+                    <a href="#" class="hover:underline">Bergside LLC: Controlling the video traffic flows</a>
+                  </h3>
+                </div>
+
+                <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                  <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                    Job Description
+                  </p>
+                  <h3 class=" font-semibold text-gray-900 ">
+                    <a href="#" class="hover:underline">Bergside LLC: Controlling the video traffic flows</a>
+                  </h3>
+                </div>
+
+                <div class="flex mb-5 flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+                  <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
+                    Application Deadline
+                  </p>
+                  <h3 class="text-lg font-semibold text-gray-900 ">
+                      {{job.application_deadline}}
+                  </h3>
+                </div>
+
+
+
+              </div>
+              
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-5">
+              Applied Students
+        </h2>
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+              <tr>
+                  <th scope="col" class="px-6 py-3">
+                      KTU ID
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Name
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Email
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Course
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Action
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              {% if applications %}
+              {% for application in applications %}
+              <tr class="bg-white border-b  hover:bg-gray-50">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                      {{ application.student.ktu_id}}
+                  </th>
+                  <td class="px-6 py-4">
+                      {{ application.student.first_name }} {% if application.student.middle_name %}{{ application.student.middle_name }}{% endif %} {% if application.student.last_name %}{{ application.student.last_name }}{% endif %}
+                  </td>
+                  <td class="px-6 py-4">
+                      {{ application.student.email_id }}
+                  </td>
+                  <td class="px-6 py-4">
+                      {{ application.student.course }}
+                  </td>
+                  <td class="px-6 py-4">
+                      <a href="{% url "recruiter:view_application" application.id %}" class="font-medium text-blue-600  hover:underline">View</a>
+                  </td>
+              </tr>
+              {% endfor %}
+              {%else%}
+              <tr>
+                  <td colspan="5">
+                      <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
+                          <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                      </div>
+                  </td>
+              </tr>
+              {% endif %}
+          </tbody>
+      </table>
+          </div>
         </section>
-        <section class="bg-white  antialiased">
-            <div class="max-w-screen-xl px-4 mx-auto">
-              <div class="max-w-3xl">
-                <h2 class="text-2xl font-semibold text-gray-900 ">
-                  Details
-                </h2>
-              </div>
-          
-              <div class="flow-root border rounded mt-5">
-                <div class="-my-4 divide-y divide-gray-200 ">
-                  <div class="flex flex-col mt-4 gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
-                    <p class="w-32 text-lg font-normal text-gray-500 sm:text-right  shrink-0">
-                      Role
-                    </p>
-                    <h3 class=" font-semibold text-gray-900 ">
-                        {{job.role}}
-                    </h3>
-                  </div>
-          
-                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
-                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
-                      Job Type
-                    </p>
-                    <h3 class=" font-semibold text-gray-900 ">
-                        {{job.job_type}}
-                    </h3>
-                  </div>
-
-                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
-                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
-                      CTC
-                    </p>
-                    <h3 class=" font-semibold text-gray-900 ">
-                        {{job.ctc}} LPA
-                    </h3>
-                  </div>
-
-                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
-                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
-                      Work Location
-                    </p>
-                    <h3 class=" font-semibold text-gray-900 ">
-                      <a href="#" class="hover:underline">Bergside LLC: Controlling the video traffic flows</a>
-                    </h3>
-                  </div>
-
-                  <div class="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
-                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
-                      Job Description
-                    </p>
-                    <h3 class=" font-semibold text-gray-900 ">
-                      <a href="#" class="hover:underline">Bergside LLC: Controlling the video traffic flows</a>
-                    </h3>
-                  </div>
-
-                  <div class="flex mb-5 flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
-                    <p class="w-32  font-normal text-gray-500 sm:text-right  shrink-0">
-                      Application Deadline
-                    </p>
-                    <h3 class="text-lg font-semibold text-gray-900 ">
-                        {{job.application_deadline}}
-                    </h3>
-                  </div>
-
-
-
-                </div>
-                
-              </div>
-              <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-5">
-                Applied Students
-          </h2>
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        KTU ID
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Name
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Email
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Course
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Action
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if applications %}
-                {% for application in applications %}
-                <tr class="bg-white border-b  hover:bg-gray-50">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        {{ application.student.ktu_id}}
-                    </th>
-                    <td class="px-6 py-4">
-                        {{ application.student.first_name }} {% if application.student.middle_name %}{{ application.student.middle_name }}{% endif %} {% if application.student.last_name %}{{ application.student.last_name }}{% endif %}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{ application.student.email_id }}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{ application.student.course }}
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="{% url "cgpu_admin:view_student" application.student.id %}" class="font-medium text-blue-600  hover:underline">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-                {%else%}
-                <tr>
-                    <td colspan="5">
-                        <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
-                            <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
-                        </div>
-                    </td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
-            </div>
-
-            
-
-          </section>
-  
-    </div>
+  </div>
 </div>
+
+
 
 {% endblock content %}

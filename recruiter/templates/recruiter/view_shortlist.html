@@ -2,160 +2,154 @@
 {% load static %}
 
 {% block content %}
-
-<div class="w-screen h-screen bg-slate-100  overflow-y-auto">
-    <div class="flex flex-col h-full max-w-6xl mx-auto  overflow-y-auto bg-white p-10 rounded-lg">
-        <nav class="flex" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-            <li class="inline-flex items-center">
-                <a href="{% url "recruiter:jobs" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                Jobs
-                </a>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                </svg>
-                <a href="{% url "recruiter:view_job" shortlist.job.id %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                    {{job.recruiter}} : {{job.role}}
+<div class="w-screen h-screen flex bg-slate-100">
+    {% include "recruiter/sidebar.html" %}
+    <div class="flex flex-col w-full h-full">
+       {% include "recruiter/navbar.html" %}
+        <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                <li class="inline-flex items-center">
+                    <a href="{% url "recruiter:shortlists" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    Shortlists
                     </a>
+                </li>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                    </svg>
+                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{job.recruiter}} : {{job.role}}</span>
+                    </div>
+                </li>
+                </ol>
+            </nav>
+            <section>
+              <div class="pt-4 pb-8 px-4 mx-auto max-w-screen-xl lg:px-6">
+                <div class="flex justify-between items-center">
+                    <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
+                      <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">Shortlist: {{job.role}}</span></h2>
+                    </div>
+                    {% if not shortlist.is_published %}
+                        <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Publish</button>
+                    {% endif %}
                 </div>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                </svg>
-                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">Shortlist</span>
-                </div>
-            </li>
-            </ol>
-        </nav>
-        <section>
-          <div class="py-8 px-4 mx-auto max-w-screen-xl pt-14 lg:px-6">
-            <div class="flex justify-between items-center">
-                <div class="max-w-screen-lg text-gray-500 sm:text-lg ">
-                  <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">Shortlist: {{job.role}}</span></h2>
-                </div>
-                {% if not shortlist.is_published %}
-                    <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Publish</button>
-                {% endif %}
-            </div>
-
-            <div class="flex flex-col gap-2 w-full mb-5 border rounded p-4">
-                <h1 class="text-lg font-semibold">Applied Students ({{applied_applications | length}})</h1>
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Course
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                CGPA
-                            </th>
-                            {% if not shortlist.is_published %}
+    
+                <div class="flex flex-col gap-2 w-full mb-5 border rounded p-4">
+                    <h1 class="text-lg font-semibold">Applied Students ({{applied_applications | length}})</h1>
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                            <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Action
+                                    Name
                                 </th>
-                            {% endif %}
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if applied_applications %}
-                        {% for application in applied_applications %}
-                        <tr class="bg-white border-b  hover:bg-gray-50">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                {{ application.student.first_name }} {% if application.student.middle_name %}{{ application.student.middle_name }}{% endif %} {% if application.student.last_name %}{{ application.student.last_name }}{% endif %}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ application.student.course }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ application.student.cgpa }}
-                            </td>
-                            {% if not shortlist.is_published %}
-                            <td class="px-6 py-4">
-                                <a href="{% url "recruiter:add_to_shortlist" application.id %}" class="font-medium text-blue-600  hover:underline">Add to shortlist</a>
-                            </td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                        {%else%}
-                        <tr>
-                            <td colspan="5">
-                                <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
-                                    <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex flex-col gap-2 w-full mb-5 border rounded p-4">
-                <h1 class="text-lg font-semibold">Shortlisted Students ({{shortlisted_applications | length}})</h1>
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Course
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                CGPA
-                            </th>
-                            {% if not shortlist.is_published %}
                                 <th scope="col" class="px-6 py-3">
-                                    Action
+                                    Course
                                 </th>
+                                <th scope="col" class="px-6 py-3">
+                                    CGPA
+                                </th>
+                                {% if not shortlist.is_published %}
+                                    <th scope="col" class="px-6 py-3">
+                                        Action
+                                    </th>
+                                {% endif %}
+    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if applied_applications %}
+                            {% for application in applied_applications %}
+                            <tr class="bg-white border-b  hover:bg-gray-50">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                                    {{ application.student.first_name }} {% if application.student.middle_name %}{{ application.student.middle_name }}{% endif %} {% if application.student.last_name %}{{ application.student.last_name }}{% endif %}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ application.student.course }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ application.student.cgpa }}
+                                </td>
+                                {% if not shortlist.is_published %}
+                                <td class="px-6 py-4">
+                                    <a href="{% url "recruiter:add_to_shortlist" application.id %}" class="font-medium text-blue-600  hover:underline">Add to shortlist</a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            {%else%}
+                            <tr>
+                                <td colspan="5">
+                                    <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
+                                        <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                                    </div>
+                                </td>
+                            </tr>
                             {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if shortlisted_applications %}
-                        {% for application in shortlisted_applications %}
-                        <tr class="bg-white border-b  hover:bg-gray-50">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                {{ application.student.first_name }} {% if application.student.middle_name %}{{ application.student.middle_name }}{% endif %} {% if application.student.last_name %}{{ application.student.last_name }}{% endif %}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ application.student.course }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ application.student.cgpa }}
-                            </td>
-                            {% if not shortlist.is_published %}
-                            <td class="px-6 py-4">
-                                <a href="{% url "recruiter:remove_from_shortlist" application.id %}" class="font-medium text-blue-600  hover:underline">Remove</a>
-                            </td>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex flex-col gap-2 w-full mb-5 border rounded p-4">
+                    <h1 class="text-lg font-semibold">Shortlisted Students ({{shortlisted_applications | length}})</h1>
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Course
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    CGPA
+                                </th>
+                                {% if not shortlist.is_published %}
+                                    <th scope="col" class="px-6 py-3">
+                                        Action
+                                    </th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if shortlisted_applications %}
+                            {% for application in shortlisted_applications %}
+                            <tr class="bg-white border-b  hover:bg-gray-50">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                                    {{ application.student.first_name }} {% if application.student.middle_name %}{{ application.student.middle_name }}{% endif %} {% if application.student.last_name %}{{ application.student.last_name }}{% endif %}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ application.student.course }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ application.student.cgpa }}
+                                </td>
+                                {% if not shortlist.is_published %}
+                                <td class="px-6 py-4">
+                                    <a href="{% url "recruiter:remove_from_shortlist" application.id %}" class="font-medium text-blue-600  hover:underline">Remove</a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            {%else%}
+                            <tr>
+                                <td colspan="5">
+                                    <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
+                                        <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                                    </div>
+                                </td>
+                            </tr>
                             {% endif %}
-                        </tr>
-                        {% endfor %}
-                        {%else%}
-                        <tr>
-                            <td colspan="5">
-                                <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
-                                    <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-          </div>
-        </section>
-        
-  
-    </div>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </section>
+            
+    
+       </div>
 </div>
+
+
 
 <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">

@@ -5,15 +5,12 @@
     
     <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44  ">
         <div class="px-4 py-3 text-sm text-gray-900 ">
-        <div>{{ request.user|title }}</div>
+        <div>{{ request.user|title }} (Recruiter)</div>
         <div class="font-medium truncate">{{ request.user.email }}</div>
         </div>
         <ul class="py-2 text-sm text-gray-700 " aria-labelledby="avatarButton">
         <li>
-            <a href="{% url "recruiter:home" %}" class="block px-4 py-2 hover:bg-gray-100  ">Home</a>
-        </li>
-        <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100  ">Settings</a>
+            <a href="{% url "recruiter:profile" %}" class="block px-4 py-2 hover:bg-gray-100  ">My Profile</a>
         </li>
         </ul>
         <div class="py-1">

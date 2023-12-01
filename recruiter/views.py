@@ -24,7 +24,18 @@ def register(request):
 
 login_required_with_type('recruiter')
 def home(request):
-    return render(request, 'recruiter/home.html')
+    recruiter = Recruiter.objects.get(account=request.user)
+    recent_applications = Application.objects.filter(job__recruiter=recruiter).order_by('-id')[:5]
+    recent_messages = Message.objects.filter(recepient=request.user).order_by('-id')[:5]
+    number_of_applications = Application.objects.filter(job__recruiter=recruiter).count()
+    number_of_jobs = Job.objects.filter(recruiter=recruiter).count()
+    context = {
+        'recent_applications': recent_applications,
+        'recent_messages': recent_messages,
+        'number_of_applications': number_of_applications,
+        'number_of_jobs': number_of_jobs
+    }
+    return render(request, 'recruiter/home.html', context)
 
 
 login_required_with_type('recruiter')
@@ -47,6 +58,23 @@ def jobs(request):
         'courses': courses,
     }
     return render(request, 'recruiter/jobs.html', context)
+
+login_required_with_type('recruiter')
+def applications(request):
+    profile = Recruiter.objects.get(account=request.user)
+    applications = Application.objects.filter(job__recruiter=profile)
+    context = {
+        'applications': applications
+    }
+    return render(request, 'recruiter/applications.html', context)
+
+login_required_with_type('recruiter')
+def view_application(request, id):
+    application = Application.objects.get(id=id)
+    context = {
+        'application': application
+    }
+    return render(request, 'recruiter/view_application.html', context)
 
 login_required_with_type('recruiter')
 def view_job(request, id):
