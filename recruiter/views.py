@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterRecruiterForm, AddJobForm
 from .models import Recruiter, Job, Application, Shortlist
+from core.models import Account, Message
 from student.models import Course
 from core.decorators import login_required_with_type
+from django.db.models import Q
+
 
 login_required_with_type('recruiter')
 def register(request):
@@ -127,4 +130,22 @@ def shortlists(request):
 
 login_required_with_type('recruiter')
 def messages(request):
-    return render(request, 'recruiter/messages.html')
+    messages = Message.objects.filter(Q(sender=request.user) | Q(recepient=request.user)).order_by('created_on')
+    context = {
+        'messages': messages
+    }
+    return render(request, 'recruiter/messages.html', context)
+
+
+@login_required_with_type('recruiter')
+def send_message(request):
+    account = Account.objects.get(type='admin')
+    Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+
+    return redirect('recruiter:messages')
+
+@login_required_with_type('recruiter')
+def delete_message(request, id):
+    message = Message.objects.get(id=id)
+    message.delete()
+    return redirect('recruiter:messages')

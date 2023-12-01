@@ -16,4 +16,6 @@ urlpatterns = [
     path('jobs/create/', views.create_job, name='create-job'),
     path('shortlists/', views.shortlists, name='shortlists'),
     path('messages/', views.messages, name='messages'),
+    path('messages/send/', views.send_message, name='send_message'),
+    path('messages/<int:id>/delete/', views.delete_message, name='delete_message'),
 ]
