@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import Account
-
+from django.core.exceptions import ObjectDoesNotExist
 
 SEX_CHOICES = (
     ('Male', 'Male'),
@@ -125,6 +125,23 @@ class Student(models.Model):
     ktu_id = models.CharField(max_length=50)
     pending_arrears = models.IntegerField(default=0)
     cleared_arrears = models.IntegerField(default=0)
+
+    def hsc(self):
+        try:
+            return AcademicQualification.objects.get(student=self, type_of_education='HSC')
+        except ObjectDoesNotExist:
+            return None
+        
+    def ssc(self):
+        try:
+            return AcademicQualification.objects.get(student=self, type_of_education='SSC')
+        except ObjectDoesNotExist:
+            return None
+    def ug(self):
+        try:
+            return AcademicQualification.objects.get(student=self, type_of_education='UG')
+        except ObjectDoesNotExist:
+            return None
 
     def cgpa(self):
         try:
