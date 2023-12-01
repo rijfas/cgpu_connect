@@ -21,6 +21,13 @@ APPLICATION_STATUS_CHOICES = (
     ('CLR', 'Cleared the process'),
 )
 
+SHORTLIST_TYPE_CHOICES = (
+    ('VRF', 'Verified'),
+    ('TSP', 'Test Passed'),
+    ('SHR', 'Shortlisted For Interview'),
+    ('CLR', 'Cleared the process'),
+)
+
 SLAB_CHOICES = (
     ('1', 'First'),
     ('2', 'Second'),
@@ -50,6 +57,7 @@ class Application(models.Model):
     
 class Shortlist(models.Model):
     job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    type = models.CharField(max_length=3, choices=SHORTLIST_TYPE_CHOICES, default='VRF')
     applications = models.ManyToManyField(Application)
     is_published = models.BooleanField(default=False)
 
