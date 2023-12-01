@@ -33,4 +33,9 @@ urlpatterns = [
     path('accounts/', views.accounts, name='accounts'),
     path('accounts/create/', views.create_account, name='create_account'),
     path('accounts/bulk_create/student/', views.bulk_create_student_account, name='bulk_create_student_account'),
+    path('messages/', views.messages, name='messages'),
+    path('messages/<int:id>/', views.view_message, name='view_message'),
+    path('messages/<int:id>/send', views.send_message, name='send_message'),
+    path('messages/<int:id>/delete/<int:message_id>', views.delete_message, name='delete_message'),
+
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from core.models import Account
+from core.models import Account, Message
 from django.core.exceptions import ObjectDoesNotExist
 from student.models import Student, Department, AcademicQualification, Course, STREAM_CHOICE
 from recruiter.models import Job, Recruiter, Application, Shortlist
@@ -7,6 +7,7 @@ from core.decorators import login_required_with_type
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password
+from django.db.models import Q
 from .models import Announcement
 
 @login_required_with_type('admin')
@@ -355,5 +356,51 @@ def bulk_create_student_account(request):
 ]
     )
     return redirect('cgpu_admin:accounts')
+
+
+@login_required_with_type('admin')
+def messages(request):
+    search = request.GET.get('q')
+    accounts = Account.objects.filter(username__icontains=search) if search else Account.objects.all() 
+    paginator = Paginator(accounts, 7)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
+    context = {
+        'search': search,
+        'accounts': current_page.object_list,
+        'total_count': accounts.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
+    }
+    return render(request, 'cgpu_admin/messages.html', context)
+
+@login_required_with_type('admin')
+def view_message(request, id):
+    account = Account.objects.get(id=id)
+    messages = Message.objects.filter(Q(sender=request.user) & Q(recepient=account)).order_by('created_on')
+    context = {
+        'account': account,
+        'messages': messages
+    }
+    return render(request, 'cgpu_admin/view_message.html', context)
+
+@login_required_with_type('admin')
+def send_message(request, id):
+    account = Account.objects.get(id=id)
+    Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+
+    return redirect('cgpu_admin:view_message', id)
+
+@login_required_with_type('admin')
+def delete_message(request, id, message_id):
+    message = Message.objects.get(id=message_id)
+    message.delete()
+    return redirect('cgpu_admin:view_message', id)
 
 
