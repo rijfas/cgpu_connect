@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block content %}
+<div class="max-w-5xl py-10 mx-auto flex flex-col">
+  <form method="post">
+    {% csrf_token %}
+    <h1 class="text-2xl font-semibold mb-10">CGPU Coordinator Profile</h1>
+
+    <div class="mb-6 w-full">
+      <label for="name" class="block mb-2 text-sm font-medium text-gray-900">
+        Name
+        <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        name="name"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="Enter name"
+      />
+    </div>
+
+    <div class="mb-6 w-full">
+      <label
+        for="mobile_no"
+        class="block mb-2 text-sm font-medium text-gray-900"
+      >
+        Mobile Number
+        <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="number"
+        name="mobile_no"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="Enter mobile number"
+        required
+      />
+    </div>
+
+    <div class="mb-6 w-full">
+      <label
+        for="email_id"
+        class="block mb-2 text-sm font-medium text-gray-900"
+      >
+        Email
+        <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="email"
+        name="email_id"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="Enter email"
+        required
+      />
+    </div>
+
+    <div class="mb-6 w-full">
+      <label
+        for="department"
+        class="block mb-2 text-sm font-medium text-gray-900"
+      >
+        Select your department
+        <span class="text-red-500">*</span>
+      </label>
+      <select
+        name="department"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        required
+      >
+        <option value="" selected disabled>Select department</option>
+        {% for department in departments %}
+        <option value="{{department.id}}">{{department.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+    >
+      Save
+    </button>
+  </form>
+</div>
+
+{% endblock content %}

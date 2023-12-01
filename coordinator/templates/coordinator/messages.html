@@ -11,7 +11,60 @@
     <div class="flex flex-col w-full h-full">
        {% include "coordinator/navbar.html" %}
         <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
-                <h1>Messages</h1>
+            <div class="flex items-center justify-between">
+                <h1 class="text-lg font-semibold underline">Messages</h1>
+                <div class="flex gap-2 justify-end items-center">
+                    {% if search %}
+                    <span class="text-sm text-gray-400">showing results for "{{search}}" (<a href="{% url "cgpu_admin:messages" %}" class="underline">clear</a>)</span>
+                    {% endif %}
+                    {% include "cgpu_admin/search_bar.html" %}
+                </div>
+            </div>
+            <div class="relative h-full overflow-x-hidden overflow-y-auto mt-5 shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                User Name
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                        {% for student in students %}
+                        <tr class="bg-white border-b ">
+                            <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
+                                <div class="relative cursor-pointer inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-white rounded-full ">
+                                    <span class="font-medium text-gray-600 ">{{ student.account.username.0|upper }}{{ student.account.username.1|upper }}</span>
+                                </div>
+                                <div class="ps-3">
+                                    <div class="text-base font-semibold">{{ student.account.username }}</div>
+                                    <div class="font-normal text-gray-500">{{ student.account.email }}</div>
+                                </div>  
+                            </th>
+                            <td class="px-6 py-4">
+                                <a href="{% url "coordinator:view_message" student.account.id %}" class="font-medium text-blue-600 hover:underline">Message</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="2">
+                                <div class="opacity-25 flex flex-col gap-4 w-full h-full justify-center items-center">
+                                    <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-40">
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                
+                
+            </div>
+            {% include "cgpu_admin/pagination.html" %}
        </div>
 </div>
 {% endblock content %}
