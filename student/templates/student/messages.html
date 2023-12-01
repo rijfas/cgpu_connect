@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Student: Messages</title>
+{% endblock head %}
+
+{% block content %}
+<div class="w-screen h-screen flex bg-slate-100">
+    {% include "student/sidebar.html" %}
+    <div class="flex flex-col w-full h-full">
+       {% include "student/navbar.html" %}
+        <div class="flex flex-col overflow-x-hidden overflow-y-auto w-full h-full p-5 gap-4 bg-white rounded-l-xl">
+            <section class="mt-5 mb-2 overflow-y-auto">
+                <div class="max-w-screen-xl flex flex-col gap-2  relative h-full px-4 mx-auto">
+                  {% if messages %}
+                  {% for message in messages %}
+                  {% if message.sender == request.user %}
+                  <div class="flex flex-col gap-2 w-full ">
+                    <a href="{% url "student:delete_message" message.id %}" class="group cursor-pointer relative flex flex-col bg-slate-100 px-4 py-2 rounded-lg rounded-br-none w-lg self-end">
+                        <p class="text-sm">{{message.content}}</p>
+                        <div class="flex justify-end mt-2">
+                            <span class="text-xs text-gray-300">{{message.created_on}}</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-20 text-red-400 hidden group-hover:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                          </svg>
+                     </a>
+    
+                      
+                  </div>
+                  {%else%}
+                  <div class="flex flex-col gap-2 w-full">
+                    <div class="flex flex-col bg-slate-100 px-4 py-2 rounded-lg rounded-bl-none w-lg self-start">
+                        <p class="text-sm">{{message.content}}</p>
+                        <div class="flex justify-between mt-2 text-xs text-gray-300 gap-4">
+                            <span class="font-semibold">CGPU Coordinator</span>
+                            <span>{{message.created_on}}</span>
+                        </div>
+                    </div>
+                </div>
+                  {% endif %}
+                  {% endfor %}
+                  {% else %}
+                  <div class="opacity-25 flex flex-col gap-4 w-full h-full justify-center items-center">
+                    <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                    <span class="italic text-sm">No messages</span>
+                </div>
+                  {% endif %}
+    
+              </section>
+    
+              <form method="post" action="{% url "student:send_message" %}" class=" flex flex-col gap-2 mt-auto mb-2">
+                    {% csrf_token %}
+                <textarea name="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 " placeholder="Write your message here..." required></textarea>
+                <div class="flex">
+                    <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200  hover:bg-blue-800">
+                        Send Message
+                    </button>
+                </div>
+              </form>
+       </div>
+</div>
+{% endblock content %}

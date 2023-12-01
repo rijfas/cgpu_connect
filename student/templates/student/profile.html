@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block head %}
     <title>CGPU Admin: Home</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -220,6 +220,101 @@
                 </div>
             </div>
             {% endif %}
+          <div class="flex justify-between items-center mt-10">
+            <h2 class="text-xl font-semibold text-gray-900 ">
+                Results
+          </h2>
+          <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 ">Add New</button>
+
+          </div>
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Semester
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        SGPA
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if results %}
+                {% for result in results %}
+                <tr class="bg-white border-b  hover:bg-gray-50">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                        {{ result.semester}}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ result.gpa }} 
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="{% url "student:delete_result" result.id %}" class="font-medium text-blue-600  hover:underline">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {%else%}
+                <tr>
+                    <td colspan="5">
+                        <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
+                            <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
        </div>
+</div>
+
+<div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                <h3 class="text-lg font-semibold text-gray-900 ">
+                    Add New Result
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form class="p-4 md:p-5" method="post" action="{% url "student:add_result" %}">
+                {% csrf_token %}
+                <div class="flex flex-col gap-4 mb-4">
+                    <div class="w-full">
+                        <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 ">Semester <span class="text-red-500">*</span></label>
+                        <select name="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 " required>
+                            <option value="" selected disabled>Select semester </option>
+                            {% for semester in semesters %}
+                                <option value="{{semester.0}}">{{semester.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-full">
+                        <label for="grade" class="block mb-2 text-sm font-medium text-gray-900 ">Grade</label>
+                        <input type="text" name="grade" id="grade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Type product name" required="">
+                    </div>
+                    <div class="flex items-start mb-5">
+                        <div class="flex items-center h-5">
+                          <input name="passed" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 ">
+                        </div>
+                        <label for="passed" class="ms-2 text-sm font-medium text-gray-900">Passed?</label>
+                    </div>
+
+
+                </div>
+                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                    Add Result
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock content %}
