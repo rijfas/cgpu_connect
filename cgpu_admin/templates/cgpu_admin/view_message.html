@@ -51,7 +51,12 @@
             </div>
               {% endif %}
               {% endfor %}
-              {% else %}{% endif %}
+              {% else %}
+              <div class="opacity-25 flex flex-col gap-4 w-full h-full justify-center items-center">
+                <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                <span class="italic text-sm">No messages</span>
+            </div>
+              {% endif %}
 
           </section>
 
