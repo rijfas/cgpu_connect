@@ -33,8 +33,9 @@
                   <div class="flex flex-col gap-2 w-full">
                     <div class="flex flex-col bg-slate-100 px-4 py-2 rounded-lg rounded-bl-none w-lg self-start">
                         <p class="text-sm">{{message.content}}</p>
-                        <div class="flex mt-2">
-                            <span class="text-xs text-gray-300">{{message.created_on}}</span>
+                        <div class="flex justify-between mt-2 text-xs text-gray-300 gap-4">
+                            <span class="font-semibold">Admin</span>
+                            <span>{{message.created_on}}</span>
                         </div>
                     </div>
                 </div>
