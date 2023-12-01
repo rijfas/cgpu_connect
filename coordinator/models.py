@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import Account
 
-from student.models import Course
+from student.models import Department
 
 # Create your models here.
 class Coordinator(models.Model):
@@ -9,7 +9,7 @@ class Coordinator(models.Model):
     name = models.CharField(max_length=150)
     mobile_no = models.CharField(max_length=15, blank=True, null=True)
     email_id = models.CharField(max_length=30, blank=False, null=False)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.name}"
