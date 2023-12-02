@@ -23,7 +23,7 @@ class Message(models.Model):
         return f'{self.sender}: {self.content}'
 
 class Account(AbstractUser):
-    type = models.CharField(max_length=15, choices=ACCOUNT_TYPE_CHOICES, default='student')
+    type = models.CharField(max_length=15, choices=ACCOUNT_TYPE_CHOICES, default='admin')
 
     def has_unread_messages(self):
         return Message.objects.filter(recepient=self, read=False).exists()
