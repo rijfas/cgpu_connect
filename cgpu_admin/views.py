@@ -9,18 +9,29 @@ from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q
 from .models import Announcement
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+from calendar import month_name
 
 @login_required_with_type('admin')
 def home(request):
+    analytics_job = Job.objects.annotate(month=TruncMonth('posted_date')).values('month').annotate(c=Count('id')).values('month', 'c')
+    analytics_placement = Placement.objects.annotate(month=TruncMonth('created_on')).values('month').annotate(c=Count('id')).values('month', 'c')
+    dates_job = [f'{d["month"].year} {month_name[d["month"].month]}' for d in analytics_job]
+    dates_placment = [f'{d["month"].year} {month_name[d["month"].month]}' for d in analytics_job]
+    print(dates_job)
     students_count = Student.objects.all().count()
     recruiters_count = Recruiter.objects.all().count()
     jobs_count = Job.objects.all().count()
     latest_recruiters = reversed(Recruiter.objects.all().order_by('-id')[:5])
     context = {
+        'analytics_job': analytics_job, 
+        'analytics_placement': analytics_placement, 
         'students_count': students_count,
         'recruiters_count': recruiters_count,
         'jobs_count': jobs_count,
         'latest_recruiters': latest_recruiters,
+        'dates': dates_job + dates_placment
     }
     return render(request, 'cgpu_admin/home.html', context)
 
