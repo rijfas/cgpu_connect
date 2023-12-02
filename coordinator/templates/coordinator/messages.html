@@ -46,7 +46,7 @@
                                 </div>  
                             </th>
                             <td class="px-6 py-4">
-                                <a href="{% url "coordinator:view_message" student.account.id %}" class="font-medium text-blue-600 hover:underline">Message</a>
+                                <a href="{% url "coordinator:view_message" student.account.id %}" class="font-medium text-blue-600 hover:underline">Message {% if account.has_new_message %}<span class="absolute -right-10 text-xs text-white bg-red-500 rounded p-1">New</span>{% endif %}</a>
                             </td>
                         </tr>
                         {% endfor %}

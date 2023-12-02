@@ -1,130 +1,141 @@
 {% extends "base.html" %}
 {% load static %}
-{% block content %}
 
-<div class="w-screen h-screen bg-slate-100">
-    <div class="flex flex-col h-full overflow-y-auto max-w-6xl mx-auto bg-white p-10 rounded-lg">
-        <nav class="flex" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-            <li class="inline-flex items-center">
-                <a href="{% url "cgpu_admin:recruiters" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                Recruiters
-                </a>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                </svg>
-                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{recruiter}}</span>
-                </div>
-            </li>
-            </ol>
-        </nav>
-        <section class="bg-white h-full flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-2xl font-semibold text-gray-900 mt-5 mb-2">
-                    Recruiter Details
-                </h2>
-                <div class="flex gap-2">
-                    <a href="{% url "cgpu_admin:delete_recruiter_account" recruiter.id %}" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</a>
-                    {% if recruiter.account.is_active %}
-                        <a href="{% url "cgpu_admin:deactivate_recruiter_account" recruiter.id %}" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Deactivate</a>
-                    {% else %}
-                        <a href="{% url "cgpu_admin:activate_recruiter_account" recruiter.id %}" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Activate</a>
-                    {% endif %}
-                    <button data-modal-target="change-password-modal" data-modal-toggle="change-password-modal"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Change Password</button>
-                </div>
-            </div>
-            <div class="flex flex-col gap-8 border-2 border-slate-100 p-6 rounded-lg">
-                <span class="text-lg font-semibold">Account Information</span>
-                <div class="grid grid-cols-2 gap-x-4 gap-y-8">
-                        <div class="flex flex-col gap-1">
-                            <span class="text-sm text-gray-300">Username</span>
-                            <span class="text-lg font-semibold">{{recruiter.account }}</span>
+{% block head %}
+    <title>CGPU Admin: Recruiters</title>
+{% endblock head %}
+
+{% block content %}
+<div class="w-screen h-screen flex bg-slate-100">
+        {% include "cgpu_admin/sidebar.html" %}
+        <div class="flex flex-col w-full h-full">
+           {% include "cgpu_admin/navbar.html" %}
+            <div class="flex flex-col w-full h-full overflow-y-auto p-5 bg-white rounded-l-xl">
+                
+                <nav class="flex" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                    <li class="inline-flex items-center">
+                        <a href="{% url "cgpu_admin:recruiters" %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                        Recruiters
+                        </a>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+                        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{recruiter}}</span>
                         </div>
-                        
+                    </li>
+                    </ol>
+                </nav>
+                <section class="bg-white h-full flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-semibold text-gray-900 mt-5 mb-2">
+                            Recruiter Details
+                        </h2>
+                        <div class="flex gap-2">
+                            <a href="{% url "cgpu_admin:delete_recruiter_account" recruiter.id %}" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Delete</a>
+                            {% if recruiter.account.is_active %}
+                                <a href="{% url "cgpu_admin:deactivate_recruiter_account" recruiter.id %}" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Deactivate</a>
+                            {% else %}
+                                <a href="{% url "cgpu_admin:activate_recruiter_account" recruiter.id %}" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Activate</a>
+                            {% endif %}
+                            <button data-modal-target="change-password-modal" data-modal-toggle="change-password-modal"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Change Password</button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-8 border-2 border-slate-100 p-6 rounded-lg">
+                        <span class="text-lg font-semibold">Account Information</span>
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm text-gray-300">Username</span>
+                                    <span class="text-lg font-semibold">{{recruiter.account }}</span>
+                                </div>
+                                
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm text-gray-300">Email</span>
+                                    <span class="text-lg font-semibold">{{ recruiter.email_id }}</span>
+                                </div>
+                                
+                        </div>
+                    </div>
+        
+                    <div class="flex flex-col gap-4 border-2 border-slate-100 p-6 rounded-lg">
+                        <span class="text-lg font-semibold">Company Information</span>
                         <div class="flex flex-col gap-1">
-                            <span class="text-sm text-gray-300">Email</span>
+                            <span class="text-sm text-gray-300">Company Name</span>
+                            <span class="text-lg font-semibold">{{ recruiter.name }}</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">Company Support Mobile Number</span>
+                            <span class="text-lg font-semibold">{{ recruiter.mobile_no }}</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">Company Support Mail Id</span>
                             <span class="text-lg font-semibold">{{ recruiter.email_id }}</span>
                         </div>
-                        
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-4 border-2 border-slate-100 p-6 rounded-lg">
-                <span class="text-lg font-semibold">Company Information</span>
-                <div class="flex flex-col gap-1">
-                    <span class="text-sm text-gray-300">Company Name</span>
-                    <span class="text-lg font-semibold">{{ recruiter.name }}</span>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <span class="text-sm text-gray-300">Company Support Mobile Number</span>
-                    <span class="text-lg font-semibold">{{ recruiter.mobile_no }}</span>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <span class="text-sm text-gray-300">Company Support Mail Id</span>
-                    <span class="text-lg font-semibold">{{ recruiter.email_id }}</span>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <span class="text-sm text-gray-300">Company Website</span>
-                    <span class="text-lg font-semibold">{{ recruiter.website }}</span>
-                </div>
-            </div>
-
-            <h2 class="text-xl font-semibold text-gray-900 mt-10">
-                Jobs
-          </h2>
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 mb-10">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Role
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Type
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        CTC
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Action
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if jobs %}
-                {% for job in jobs %}
-                <tr class="bg-white border-b  hover:bg-gray-50">
-                    <td class="px-6 py-4">
-                        {{ job.role }}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{ job.job_type }}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{ job.ctc }} LPA
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-                {% else %}
-                <tr>
-                    <td colspan="5">
-                        <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
-                            <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-gray-300">Company Website</span>
+                            <span class="text-lg font-semibold">{{ recruiter.website }}</span>
                         </div>
-                    </td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                    </div>
+        
+                    <h2 class="text-xl font-semibold text-gray-900 mt-10">
+                        Jobs
+                  </h2>
+                  <table class="w-full text-sm text-left rtl:text-right text-gray-500 mb-10">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Role
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Type
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                CTC
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if jobs %}
+                        {% for job in jobs %}
+                        <tr class="bg-white border-b  hover:bg-gray-50">
+                            <td class="px-6 py-4">
+                                {{ job.role }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ job.job_type }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ job.ctc }} LPA
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="#" class="font-medium text-blue-600  hover:underline">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5">
+                                <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
+                                    <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+        
+        
+                  </section>
 
 
-          </section>
-    </div>
+            </div>
+       </div>
 </div>
 
 <div id="change-password-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">

@@ -206,6 +206,8 @@ def messages(request):
     paginator = Paginator(accounts, 7)
     current_page_number = int(request.GET.get('page', 1))
     current_page = paginator.page(current_page_number)
+    for account in current_page.object_list:
+        account.has_new_message = Message.objects.filter(sender=account, recepient=request.user, read=False).exists()
     context = {
         'search': search,
         'students': current_page.object_list,

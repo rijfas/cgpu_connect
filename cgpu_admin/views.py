@@ -269,11 +269,11 @@ login_required_with_type('admin')
 def view_job(request, id):
     job = Job.objects.get(id=id)
     applications = Application.objects.filter(job=job)
-    shortlist = Shortlist.objects.filter(job=job)
-    job.is_shortlist_created = len(shortlist) != 0
+    shortlists = Shortlist.objects.filter(job=job)
     context = {
         'job': job,
-        'applications': applications
+        'applications': applications,
+        'shortlists': shortlists
     }
     return render(request, 'cgpu_admin/view_job.html', context)
 
@@ -301,9 +301,9 @@ def shortlists(request):
 
 login_required_with_type('admin')
 def view_shortlist(request, id):
-    job = Job.objects.get(id=id)
+    shortlist = Shortlist.objects.get(id=id)
+    job = Job.objects.get(id=shortlist.job.id)
     applications = Application.objects.filter(job=job)
-    shortlist = Shortlist.objects.get(job=job)
     shortlisted_applications = shortlist.applications.all()
     applied_applications = [application for application in applications if application not in shortlisted_applications]
 
@@ -358,6 +358,27 @@ def accounts(request):
     return render(request, 'cgpu_admin/accounts.html', context)
 
 @login_required_with_type('admin')
+def delete_account(request, id):
+    account = Account.objects.get(id=id)
+    account.delete()
+    return redirect('cgpu_admin:accounts')
+
+
+@login_required_with_type('admin')
+def activate_account(request, id):
+    account = Account.objects.get(id=id)
+    account.is_active = True
+    account.save()
+    return redirect('cgpu_admin:accounts')
+
+@login_required_with_type('admin')
+def deactivate_account(request, id):
+    account = Account.objects.get(id=id)
+    account.is_active = False 
+    account.save()
+    return redirect('cgpu_admin:accounts')
+
+@login_required_with_type('admin')
 def create_account(request):
     account = Account(username=request.POST['username'], password=make_password(request.POST['password']), type=request.POST['type'])
     account.save()
@@ -383,10 +404,12 @@ def bulk_create_student_account(request):
 @login_required_with_type('admin')
 def messages(request):
     search = request.GET.get('q')
-    accounts = Account.objects.filter(username__icontains=search) if search else Account.objects.all() 
+    accounts = Account.objects.filter(username__icontains=search).exclude(id=request.user.id) if search else Account.objects.all().exclude(id=request.user.id) 
     paginator = Paginator(accounts, 7)
     current_page_number = int(request.GET.get('page', 1))
     current_page = paginator.page(current_page_number)
+    for account in current_page.object_list:
+        account.has_new_message = Message.objects.filter(sender=account, recepient=request.user, read=False).exists()
     context = {
         'search': search,
         'accounts': current_page.object_list,
@@ -406,6 +429,7 @@ def messages(request):
 def view_message(request, id):
     account = Account.objects.get(id=id)
     messages = Message.objects.filter(Q(sender=request.user, recepient=account) | Q(recepient=request.user, sender=account)).order_by('created_on')
+    messages.filter(recepient=request.user).update(read=True)
     context = {
         'account': account,
         'messages': messages
