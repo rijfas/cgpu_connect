@@ -90,5 +90,13 @@ class Job(models.Model):
     
     def __str__(self):
         return f'{self.role} at {self.recruiter}'
+    
+class Placement(models.Model):
+    created_on = models.DateField(auto_now_add=True)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.student} : {self.job}'
 
 
