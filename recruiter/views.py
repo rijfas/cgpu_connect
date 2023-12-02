@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterRecruiterForm, AddJobForm
-from .models import Recruiter, Job, Application, Shortlist, SHORTLIST_TYPE_CHOICES
+from .models import Recruiter, Job, Application, Shortlist, SHORTLIST_TYPE_CHOICES, Placement
 from core.models import Account, Message
 from student.models import Course
 from core.decorators import login_required_with_type
@@ -179,6 +179,13 @@ def publish_shortlist(request, id):
     shortlist = Shortlist.objects.get(id=id)
     shortlist.is_published = True 
     shortlist.save()
+    for application in shortlist.applications:
+        application.status = shortlist.type 
+        application.save()
+    if shortlist.type == 'CLR':
+        for application in shortlist.applications:
+            Placement.objects.create(job=application.job, student=application.student)
+
     return redirect('recruiter:view_shortlist', id)
 
 login_required_with_type('recruiter')
