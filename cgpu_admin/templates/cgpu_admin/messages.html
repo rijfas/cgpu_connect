@@ -44,7 +44,7 @@
                                     </div>  
                                 </th>
                                 <td class="px-6 py-4">
-                                    <a href="{% url "cgpu_admin:view_message" account.id %}" class="relative font-medium text-blue-600 hover:underline">Message   {% if account.has_new_message %}<span class="absolute -right-10 text-xs text-white bg-red-500 rounded p-1">New</span>{% endif %}</a>
+                                    <a href="{% url "cgpu_admin:view_message" account.id %}" class="relative font-medium text-blue-600 hover:underline">Message {% if account.new_messages %}<span class="absolute inline-flex items-center justify-center w-6 h-6 text-xs text-white bg-red-500 border-2 border-white rounded-full -top-4 -end-4">{{account.new_messages}}</span>{% endif %}</a>
                                 </td>
                             </tr>
                             {% endfor %}
