@@ -7,7 +7,7 @@ from .models import Coordinator
 from core.models import Account, Message
 from coordinator.models import Coordinator
 from student.models import Student, AcademicQualification, Department, Course
-from recruiter.models import Recruiter, Job, Application
+from recruiter.models import Recruiter, Job, Application, Placement
 from django.db.models import Count
 from student.models import STREAM_CHOICE
 from django.db.models import Q 
@@ -137,6 +137,29 @@ def applications(request):
         'current_page_number': current_page_number,
     }
     return render(request, 'coordinator/applications.html', context)
+
+@login_required_with_type('coordinator')
+def placements(request):
+    coordinator = Coordinator.objects.get(account=request.user)
+    search = request.GET.get('q')
+    placements = Placement.objects.filter(Q(student__name__icontains=search)&Q(student__department=coordinator.department)) if search else Placement.objects.filter(student__department=coordinator.department) 
+    paginator = Paginator(placements, 11)
+    current_page_number = int(request.GET.get('page', 1))
+    current_page = paginator.page(current_page_number)
+    context = {
+        'search': search,
+        'placements': current_page.object_list,
+        'total_count': placements.count(),
+        'start_index': current_page.start_index(),
+        'end_index': current_page.end_index(),
+        'has_prev': current_page.has_previous(),
+        'has_next': current_page.has_next(),
+        'prev': current_page.previous_page_number() if current_page.has_previous() else None,
+        'next': current_page.next_page_number() if current_page.has_next() else None,
+        'page_range': paginator.page_range,
+        'current_page_number': current_page_number,
+    }
+    return render(request, 'coordinator/placements.html', context)
 
 def students(request):
     search = request.GET.get('q')
