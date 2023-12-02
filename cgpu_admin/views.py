@@ -404,7 +404,7 @@ def bulk_create_student_account(request):
 @login_required_with_type('admin')
 def messages(request):
     search = request.GET.get('q')
-    accounts = Account.objects.filter(username__icontains=search).exclude(id=request.user.id) if search else Account.objects.all().exclude(id=request.user.id) 
+    accounts = Account.objects.filter(Q(username__icontains=search)&Q(Q(type='recruiter')|Q(type='coordinator'))) if search else Account.objects.filter(Q(type='recruiter')|Q(type='coordinator'))
     paginator = Paginator(accounts, 7)
     current_page_number = int(request.GET.get('page', 1))
     current_page = paginator.page(current_page_number)
