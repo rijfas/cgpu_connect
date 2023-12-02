@@ -114,7 +114,7 @@ class Student(models.Model):
     guardian_occupation = models.CharField(max_length=150, null=True, blank=True)
     permenant_address = models.TextField()
     communication_address = models.TextField()
-    mobile_no = models.CharField(max_length=12)
+    mobile_no = models.CharField(max_length=20)
     email_id = models.CharField(max_length=150)
     department = models.ForeignKey('Department', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
