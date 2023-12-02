@@ -30,6 +30,9 @@
                             Role
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Type
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Number of applicants
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -46,6 +49,9 @@
                     <tr class="bg-white border-b  hover:bg-gray-50">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                             {{ shortlist.job.role }}
+                        </th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                            {{ shortlist.get_type_display }}
                         </th>
                         <td class="px-6 py-4">
                             {{ shortlist.job.number_of_applicants }}
