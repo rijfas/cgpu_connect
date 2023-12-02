@@ -185,7 +185,7 @@ def publish_shortlist(request, id):
         application.status = shortlist.type 
         application.save()
     if shortlist.type == 'CLR':
-        for application in shortlist.applications:
+        for application in shortlist.applications.all():
             Placement.objects.create(job=application.job, student=application.student)
 
     return redirect('recruiter:view_shortlist', id)
