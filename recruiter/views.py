@@ -181,7 +181,7 @@ def publish_shortlist(request, id):
     shortlist = Shortlist.objects.get(id=id)
     shortlist.is_published = True 
     shortlist.save()
-    for application in shortlist.applications:
+    for application in shortlist.applications.all():
         application.status = shortlist.type 
         application.save()
     if shortlist.type == 'CLR':
