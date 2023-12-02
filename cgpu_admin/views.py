@@ -394,6 +394,7 @@ def bulk_create_student_account(request):
             Account(
             username=username_prefix+ str(i).zfill(3-len(str(i))),
             password=make_password(password),
+            type='student',
             is_active=True,
             ) for i in range(1, int(count)+1)
 ]
