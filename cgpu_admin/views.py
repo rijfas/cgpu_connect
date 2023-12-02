@@ -19,7 +19,6 @@ def home(request):
     analytics_placement = Placement.objects.annotate(month=TruncMonth('created_on')).values('month').annotate(c=Count('id')).values('month', 'c')
     dates_job = [f'{d["month"].year} {month_name[d["month"].month]}' for d in analytics_job]
     dates_placment = [f'{d["month"].year} {month_name[d["month"].month]}' for d in analytics_job]
-    print(dates_job)
     students_count = Student.objects.all().count()
     recruiters_count = Recruiter.objects.all().count()
     jobs_count = Job.objects.all().count()
