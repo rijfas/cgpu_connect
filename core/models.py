@@ -17,6 +17,7 @@ class Message(models.Model):
     content = models.TextField()
     sender = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='sender_of_message')
     recepient = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='reciever_of_message')
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.sender}: {self.content}'

@@ -225,6 +225,7 @@ def messages(request):
 def view_message(request, id):
     account = Account.objects.get(id=id)
     messages = Message.objects.filter(Q(sender=request.user, recepient=account) | Q(recepient=request.user, sender=account)).order_by('created_on')
+    messages.update(read=True)
     context = {
         'account': account,
         'messages': messages
