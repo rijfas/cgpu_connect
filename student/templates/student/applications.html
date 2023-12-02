@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <title>CGPU Admin: Home</title>
+    <title>Student: My Applications</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 {% endblock head %}
 
@@ -38,7 +38,7 @@
                                 {{ application.applied_on }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ application.status }}
+                                {{ application.get_status_display }}
                             </td>
                             <td class="px-6 py-4">
                                 <a href="{% url "student:view_application" application.id %}" class="font-medium text-blue-600  hover:underline">View</a>
