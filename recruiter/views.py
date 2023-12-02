@@ -231,7 +231,7 @@ def create_shortlist(request):
 login_required_with_type('recruiter')
 def messages(request):
     messages = Message.objects.filter(Q(sender=request.user) | Q(recepient=request.user)).order_by('created_on')
-    messages.update(read=True)
+    messages.filter(recepient=request.user).update(read=True)
     context = {
         'messages': messages
     }
