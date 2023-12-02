@@ -5,6 +5,8 @@ from student.models import Student, AcademicQualification
 from recruiter.models import Recruiter
 from coordinator.models import Coordinator
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+
 def login(request):
     if request.POST:
         user = authenticate(
@@ -34,3 +36,22 @@ def login(request):
 
     form = AuthenticationForm()
     return render(request, 'registration/login.html', {"form": form})
+
+@login_required
+def home(request):
+    if request.user.type == 'admin':
+        return redirect('cgpu_admin:home')
+    elif request.user.type == 'student':
+        if not Student.objects.filter(account=request.user).exists():
+            return redirect('student:register-basic-info')
+        if not AcademicQualification.objects.filter(student=Student.objects.get(account=request.user)).exists():
+            return redirect('student:add-academic-info')
+        return redirect('student:home')
+    elif request.user.type == 'recruiter':
+        if not Recruiter.objects.filter(account=request.user).exists():
+            return redirect('recruiter:register')
+        return redirect('recruiter:home')
+    elif request.user.type == 'coordinator':
+        if not Coordinator.objects.filter(account=request.user).exists():
+            return redirect('coordinator:register')
+        return redirect('coordinator:home')
