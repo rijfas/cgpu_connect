@@ -6,6 +6,7 @@ from recruiter.models import Recruiter
 from coordinator.models import Coordinator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 
 def login(request):
     if request.POST:
@@ -55,3 +56,11 @@ def home(request):
         if not Coordinator.objects.filter(account=request.user).exists():
             return redirect('coordinator:register')
         return redirect('coordinator:home')
+    
+
+@login_required
+def change_password(request):
+    account = request.user
+    account.password = make_password(request.POST['password'])
+    account.save()
+    return redirect('core:login')
