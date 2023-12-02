@@ -170,10 +170,26 @@ def add_to_shortlist(request, id, application_id):
     return redirect('recruiter:view_shortlist', id)
 
 login_required_with_type('recruiter')
+def add_all_to_shortlist(request, id):
+    shortlist = Shortlist.objects.get(id=id)
+    job = Job.objects.get(id=shortlist.job.id)
+    applications = Application.objects.filter(job=job)
+    shortlisted_applications = shortlist.applications.all()
+    applied_applications = [application for application in applications if application not in shortlisted_applications]
+    shortlist.applications.add(*applied_applications)
+    return redirect('recruiter:view_shortlist', id)
+
+login_required_with_type('recruiter')
 def remove_from_shortlist(request, id, application_id):
     application = Application.objects.get(id=application_id)
     shortlist = Shortlist.objects.get(job=application.job)
     shortlist.applications.remove(application)
+    return redirect('recruiter:view_shortlist', id)
+
+login_required_with_type('recruiter')
+def remove_all_from_shortlist(request, id):
+    shortlist = Shortlist.objects.get(id=id)
+    shortlist.applications.remove(*shortlist.applications.all())
     return redirect('recruiter:view_shortlist', id)
 
 login_required_with_type('recruiter')

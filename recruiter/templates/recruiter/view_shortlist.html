@@ -39,7 +39,12 @@
                 </div>
     
                 <div class="flex flex-col gap-2 w-full mb-5 border rounded p-4">
-                    <h1 class="text-lg font-semibold">Applied Students ({{applied_applications | length}})</h1>
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-lg font-semibold">Applied Students ({{applied_applications | length}})</h1>
+                        {% if applied_applications %}
+                            <a href="{% url 'recruiter:add_all_to_shortlist' shortlist.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Add All</a>
+                        {% endif %}
+                    </div>
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
                             <tr>
@@ -93,7 +98,12 @@
                     </table>
                 </div>
                 <div class="flex flex-col gap-2 w-full mb-5 border rounded p-4">
-                    <h1 class="text-lg font-semibold">Shortlisted Students ({{shortlisted_applications | length}})</h1>
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-lg font-semibold">Shortlisted Students ({{shortlisted_applications | length}})</h1>
+                        {% if shortlisted_applications %}
+                            <a href="{% url 'recruiter:remove_all_from_shortlist' shortlist.id %}" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Remove All</a>
+                        {% endif %}
+                    </div>
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
                             <tr>
