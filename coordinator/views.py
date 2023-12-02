@@ -203,6 +203,9 @@ def view_student(request, id):
 @login_required_with_type('coordinator')
 def messages(request):
     search = request.GET.get('q')
+    admins = Account.objects.filter(type='admin')
+    for admin in admins:
+        admin.new_messages = Message.objects.filter(sender=admin, recepient=request.user, read=False).count()
     coordinator = Coordinator.objects.get(account=request.user)
     accounts = Student.objects.filter(Q(student__account__username__icontains=search) & Q(department=coordinator.department)) if search else Student.objects.filter(department=coordinator.department) 
     paginator = Paginator(accounts, 7)
@@ -212,6 +215,7 @@ def messages(request):
         student.new_messages = Message.objects.filter(sender=student.account, recepient=request.user, read=False).count()
     context = {
         'search': search,
+        'admins': admins,
         'students': current_page.object_list,
         'total_count': accounts.count(),
         'start_index': current_page.start_index(),
