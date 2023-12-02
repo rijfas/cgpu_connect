@@ -12,6 +12,8 @@ from coordinator.models import Coordinator
 login_required_with_type('student')
 def register_basic_info(request):
     if request.method == 'POST':
+        request.user.email = request.POST['email_id']
+        request.user.save()
         form = RegisterStudentForm(request.POST)
         student = form.save(commit=False)
         student.account = request.user 

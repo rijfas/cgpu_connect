@@ -16,6 +16,8 @@ login_required_with_type('coordinator')
 def register(request):
     if request.method == 'POST':
         department = Department.objects.get(id=int(request.POST['department']))
+        request.user.email = request.POST['email_id']
+        request.user.save()
         Coordinator.objects.create(
             account=request.user,
             name=request.POST['name'],mobile_no=request.POST['mobile_no'],email_id=request.POST['email_id'],department=department)

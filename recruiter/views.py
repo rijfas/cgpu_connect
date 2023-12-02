@@ -12,6 +12,8 @@ from django.core.paginator import Paginator
 login_required_with_type('recruiter')
 def register(request):
     if request.method == 'POST':
+        request.user.email = request.POST['email_id']
+        request.user.save()
         form = RegisterRecruiterForm(request.POST)
         recruiter = form.save(commit=False)
         recruiter.account = request.user 
