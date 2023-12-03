@@ -8,6 +8,7 @@ from cgpu_admin.models import Announcement
 from recruiter.models import Job, Application
 from django.core.exceptions import ObjectDoesNotExist
 from coordinator.models import Coordinator
+from core.tasks import send_async_mail
 
 login_required_with_type('student')
 def register_basic_info(request):
@@ -173,8 +174,8 @@ def messages(request):
 def send_message(request):
     student = Student.objects.get(account=request.user)
     coordinator = Coordinator.objects.get(department=student.department)
-    Message.objects.create(sender=request.user, recepient=coordinator.account, content=request.POST['message'])
-
+    message = Message.objects.create(sender=request.user, recepient=coordinator.account, content=request.POST['message'])
+    send_async_mail.delay([student.email_id], f'CGPU Connect: You have a new message from {request.user}', message.content)
     return redirect('student:messages')
 
 @login_required_with_type('student')

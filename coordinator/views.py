@@ -11,6 +11,7 @@ from recruiter.models import Recruiter, Job, Application, Placement
 from django.db.models import Count
 from student.models import STREAM_CHOICE
 from django.db.models import Q 
+from core.tasks import send_async_mail
 
 login_required_with_type('coordinator')
 def register(request):
@@ -243,7 +244,8 @@ def view_message(request, id):
 @login_required_with_type('coordinator')
 def send_message(request, id):
     account = Account.objects.get(id=id)
-    Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+    message = Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+    send_async_mail.delay([account.email], f'CGPU Connect: You have a new message from {request.user}', message.content)
 
     return redirect('coordinator:view_message', id)
 

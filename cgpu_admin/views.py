@@ -12,6 +12,7 @@ from .models import Announcement
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from calendar import month_name
+from core.tasks import send_async_mail
 
 @login_required_with_type('admin')
 def home(request):
@@ -336,7 +337,9 @@ def announcements(request):
 
 @login_required_with_type('admin')
 def create_announcement(request):
-    Announcement.objects.create(title=request.POST['title'], description=request.POST['description'])
+    announcement = Announcement.objects.create(title=request.POST['title'], description=request.POST['description'])
+    student_mail_ids  = [student['email_id'] for student in Student.objects.all().values('email_id')]
+    send_async_mail.delay(student_mail_ids, f'New annoucement from cgpu cet: {announcement.title}', announcement.description)
     return redirect('cgpu_admin:announcements')
 
 @login_required_with_type('admin')
@@ -450,8 +453,8 @@ def view_message(request, id):
 @login_required_with_type('admin')
 def send_message(request, id):
     account = Account.objects.get(id=id)
-    Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
-
+    message = Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+    send_async_mail.delay([account.email], 'You have a new message from CGPU CET', message.content)
     return redirect('cgpu_admin:view_message', id)
 
 @login_required_with_type('admin')

@@ -6,8 +6,8 @@ from student.models import Course
 from core.decorators import login_required_with_type
 from django.db.models import Q
 from django.core.paginator import Paginator
-
-
+from core.tasks import send_async_mail
+from student.models import Student
 
 login_required_with_type('recruiter')
 def register(request):
@@ -142,8 +142,11 @@ def create_job(request):
     )
     eligible_courses_id = [int(value) for key,value in request.POST.items() if key.startswith('eligible_course')]
     job.save()
-    job.eligible_courses.add(*Course.objects.filter(id__in=eligible_courses_id))
+    eligible_courses = Course.objects.filter(id__in=eligible_courses_id)
+    job.eligible_courses.add(*eligible_courses_id)
     job.save()
+    student_emails = [student['email_id'] for student in Student.objects.filter(course__in=eligible_courses).values('email_id')]
+    send_async_mail.delay(student_emails, f"CGPU Connect: Recruitement by {profile.name} for {job.role}", f"Recruitement by {profile.name} for {job.role} check cgpu connect for more info")
     return redirect('recruiter:jobs')
 
 login_required_with_type('recruiter')
@@ -197,13 +200,15 @@ def publish_shortlist(request, id):
     shortlist = Shortlist.objects.get(id=id)
     shortlist.is_published = True 
     shortlist.save()
-    for application in shortlist.applications.all():
+    shortlisted_applications = shortlist.applications.all()
+    for application in shortlisted_applications:
         application.status = shortlist.type 
         application.save()
     if shortlist.type == 'CLR':
-        for application in shortlist.applications.all():
+        for application in shortlisted_applications:
             Placement.objects.create(job=application.job, student=application.student)
-
+    shortlisted_student_mail_ids = [application.student.email_id for application in shortlisted_applications]
+    send_async_mail.delay(shortlisted_student_mail_ids, f"CGPU Connect: Shortlisted update for {shortlist.job}", f"Your application of {shortlist.job} is shortlisted for {shortlist.get_type_display()} check cgpu connect dashboard for more info")
     return redirect('recruiter:view_shortlist', id)
 
 login_required_with_type('recruiter')
@@ -259,7 +264,9 @@ def messages(request):
 @login_required_with_type('recruiter')
 def send_message(request):
     account = Account.objects.get(type='admin')
-    Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+    message = Message.objects.create(sender=request.user, recepient=account, content=request.POST['message'])
+    send_async_mail.delay([account.email], f'CGPU Connect: You have a new message from {request.user}', message.content)
+
 
     return redirect('recruiter:messages')
 
