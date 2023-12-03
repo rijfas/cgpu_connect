@@ -132,7 +132,7 @@ def create_job(request):
         role = request.POST['role'],
         description = request.POST['description'],
         job_type = request.POST['job_type'],
-        slab = '1' if int(request.POST['ctc']) <= 6 else '2' if int(request.POST['ctc']) <= 12 else '3',
+        slab = '1' if float(request.POST['ctc']) <= 6 else '2' if float(request.POST['ctc']) <= 12 else '3',
         ctc = request.POST['ctc'],
         can_placed_students_apply = True if request.POST.get('can_placed_students_apply') else False,
         application_deadline = request.POST['application_deadline'],
