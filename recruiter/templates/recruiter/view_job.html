@@ -31,9 +31,6 @@
                 <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 ">{{job.role}}</span></h2>
                 <p class="font-light">{{job.description}}</p>
               </div>
-              {% if not shortlists %}
-              <button data-modal-target="add-shortlist-modal" data-modal-toggle="add-shortlist-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">New Shortlist</button>
-              {% endif %}
             </div>
           </div>
       </section>
@@ -88,7 +85,6 @@
               </div>
               
             </div>
-            {% if shortlists %}
             <div class="flex justify-between items-center  mt-10 mb-5">
               <h2 class="text-xl font-semibold text-gray-900">
                 Shortlists
@@ -115,7 +111,8 @@
               </tr>
             </thead>
             <tbody>
-              {% for shortlist in shortlists %}
+                    {% if shortlists %}
+                    {% for shortlist in shortlists %}
                     <tr class="bg-white border-b  hover:bg-gray-50">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                             {{ shortlist.get_type_display }}
@@ -131,9 +128,17 @@
                         </td>
                     </tr>
                     {% endfor %}
+                    {%else%}
+                    <tr>
+                        <td colspan="5">
+                            <div class="opacity-25 flex flex-col gap-4 w-full h-5/6 justify-center items-center">
+                                <img src="{% static "images/empty.svg" %}" class="w-48 h-48 my-10">
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
             </tbody>
             </table>
-            {% endif %}
 
             <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-5">
               Applied Students
