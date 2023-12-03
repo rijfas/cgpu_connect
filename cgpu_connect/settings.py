@@ -149,3 +149,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "fccoders@gmail.com"
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = "fccoders@gmail.com"
+
+
+
+# Comment if email needs to work
+DISABLE_EMAIL = True
