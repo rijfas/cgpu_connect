@@ -248,8 +248,8 @@ login_required_with_type('recruiter')
 def create_shortlist(request):
     recruiter = Recruiter.objects.get(account=request.user)
     job = Job.objects.get(id=int(request.POST['job']))
-    Shortlist.objects.create(recruiter=recruiter,job=job, type=request.POST['type']) 
-    return redirect('recruiter:shortlists')
+    shortlist = Shortlist.objects.create(recruiter=recruiter,job=job, type=request.POST['type']) 
+    return redirect('recruiter:view_shortlist', shortlist.id)
 
 login_required_with_type('recruiter')
 def messages(request):
