@@ -59,6 +59,12 @@ login_required_with_type('student')
 def home(request):
     student = Student.objects.get(account=request.user)
     jobs = Job.objects.filter(eligible_courses=student.course).order_by('-id')[:3]
+    applied_jobs = [application.job for application in Application.objects.filter(student=student)]
+    for job in jobs:
+        if job in applied_jobs:
+            job.is_already_applied = True 
+        else:
+            job.is_already_applied = False
     announcements = Announcement.objects.all().order_by('-id')[:10]
     context = {
         'jobs': jobs,
